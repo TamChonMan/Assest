@@ -24,9 +24,10 @@ def calculate_holdings(session: Session) -> list[dict]:
     """
     Calculate current holdings from all BUY/SELL transactions.
     Returns a list of holdings with symbol, quantity, avg_cost, total_invested.
+    Holdings are grouped by (account_id, asset_id) so the same stock
+    bought from different accounts appears as separate entries.
     Uses weighted average cost method.
     """
-    # ... (Previous implementation remains similar, but explicit select)
     # Get all BUY/SELL transactions with assets
     statement = (
         select(Transaction)
@@ -36,15 +37,15 @@ def calculate_holdings(session: Session) -> list[dict]:
     )
     transactions = session.exec(statement).all()
 
-    # Aggregate by asset_id
-    holdings: dict[int, dict] = {}
+    # Aggregate by (account_id, asset_id)
+    holdings: dict[tuple[int, int], dict] = {}
 
     for tx in transactions:
-        aid = tx.asset_id
-        if aid not in holdings:
-            holdings[aid] = {"quantity": 0, "total_cost": 0.0}
+        key = (tx.account_id, tx.asset_id)
+        if key not in holdings:
+            holdings[key] = {"quantity": 0, "total_cost": 0.0}
 
-        h = holdings[aid]
+        h = holdings[key]
         if tx.type == TransactionType.BUY:
             h["total_cost"] += tx.total  # price * quantity
             h["quantity"] += tx.quantity or 0
@@ -58,11 +59,13 @@ def calculate_holdings(session: Session) -> list[dict]:
 
     # Build result with asset info & current price
     result = []
-    for asset_id, h in holdings.items():
+    for (account_id, asset_id), h in holdings.items():
         if h["quantity"] <= 0.0001: # Filter near-zero
             continue
         asset = session.get(Asset, asset_id)
         if not asset: continue
+        account = session.get(Account, account_id)
+        account_name = account.name if account else "Unknown"
 
         avg_cost = h["total_cost"] / h["quantity"]
         asset_currency = getattr(asset, 'currency', 'USD') or 'USD'
@@ -82,6 +85,8 @@ def calculate_holdings(session: Session) -> list[dict]:
         market_value_usd = _convert_to_usd(market_value, asset_currency)
         
         result.append({
+            "account_id": account_id,
+            "account_name": account_name,
             "asset_id": asset_id,
             "symbol": asset.symbol,
             "name": asset.name,

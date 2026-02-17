@@ -5,11 +5,14 @@ import api from '@/lib/api';
 import {
     Briefcase, TrendingUp, TrendingDown, DollarSign,
     BarChart3, ArrowUpRight, ArrowDownRight, Sparkles,
+    Building2,
 } from 'lucide-react';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency } from '@/context/CurrencyContext';
 
 interface Holding {
+    account_id: number;
+    account_name: string;
     asset_id: number;
     symbol: string;
     name: string;
@@ -26,6 +29,12 @@ interface Holding {
 interface PortfolioSummary {
     total_invested: number;
     holdings_count: number;
+    holdings: Holding[];
+}
+
+interface AccountGroup {
+    account_id: number;
+    account_name: string;
     holdings: Holding[];
 }
 
@@ -74,10 +83,24 @@ export default function HoldingsPage() {
             .finally(() => setLoading(false));
     }, []);
 
+    // Global totals (settlement currency)
     const totalMarketValue = holdings.reduce((sum, h) => sum + convertFrom(h.market_value || 0, h.currency || 'USD'), 0);
     const totalPl = holdings.reduce((sum, h) => sum + convertFrom(h.unrealized_pl || 0, h.currency || 'USD'), 0);
     const totalInvestedConverted = holdings.reduce((sum, h) => sum + convertFrom(h.total_invested || 0, h.currency || 'USD'), 0);
     const totalPlPct = totalInvestedConverted > 0 ? (totalPl / totalInvestedConverted) * 100 : 0;
+
+    // Group holdings by account
+    const accountGroups: AccountGroup[] = [];
+    const accountMap = new Map<number, AccountGroup>();
+    for (const h of holdings) {
+        let group = accountMap.get(h.account_id);
+        if (!group) {
+            group = { account_id: h.account_id, account_name: h.account_name, holdings: [] };
+            accountMap.set(h.account_id, group);
+            accountGroups.push(group);
+        }
+        group.holdings.push(h);
+    }
 
     if (loading) {
         return (
@@ -117,6 +140,15 @@ export default function HoldingsPage() {
         },
     ];
 
+    // Accent colors for different account sections
+    const accountAccents = [
+        { from: 'from-indigo-500', to: 'to-violet-500', badge: 'bg-indigo-50', text: 'text-indigo-600' },
+        { from: 'from-emerald-500', to: 'to-teal-500', badge: 'bg-emerald-50', text: 'text-emerald-600' },
+        { from: 'from-amber-500', to: 'to-orange-500', badge: 'bg-amber-50', text: 'text-amber-600' },
+        { from: 'from-rose-500', to: 'to-pink-500', badge: 'bg-rose-50', text: 'text-rose-600' },
+        { from: 'from-cyan-500', to: 'to-blue-500', badge: 'bg-cyan-50', text: 'text-cyan-600' },
+    ];
+
     return (
         <div className="space-y-8">
             {/* Header */}
@@ -154,115 +186,144 @@ export default function HoldingsPage() {
                 })}
             </div>
 
-            {/* Holdings Table */}
-            {holdings.length > 0 ? (
-                <div className="card overflow-hidden p-0">
-                    <div className="px-6 py-4 border-b border-zinc-100/80 flex items-center gap-2">
-                        <div className="w-1 h-5 rounded-full bg-gradient-to-b from-indigo-500 to-violet-500" />
-                        <h2 className="text-base font-bold text-zinc-900">{t('holdings.title')} ({holdings.length})</h2>
-                    </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="text-[11px] text-zinc-400 uppercase tracking-wider border-b border-zinc-100/80">
-                                    <th className="text-left px-6 py-3 font-semibold">{t('holdings.symbol')}</th>
-                                    <th className="text-right px-6 py-3 font-semibold">{t('holdings.qty')}</th>
-                                    <th className="text-right px-6 py-3 font-semibold">{t('holdings.avg_cost')}</th>
-                                    <th className="text-right px-6 py-3 font-semibold">{t('holdings.current_price')}</th>
-                                    <th className="text-right px-6 py-3 font-semibold">{t('holdings.market_value')}</th>
-                                    <th className="text-right px-6 py-3 font-semibold">{t('holdings.pl')}</th>
-                                    <th className="text-right px-6 py-3 font-semibold">{t('holdings.pl_pct')}</th>
-                                    <th className="text-right px-6 py-3 font-semibold">{t('holdings.allocation')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {holdings.map((h) => {
-                                    const isProfit = (h.unrealized_pl || 0) >= 0;
-                                    const allocation = totalMarketValue > 0
-                                        ? ((h.market_value || 0) / totalMarketValue * 100)
-                                        : 0;
+            {/* Holdings Grouped by Account */}
+            {accountGroups.length > 0 ? (
+                <div className="space-y-6">
+                    {accountGroups.map((group, groupIdx) => {
+                        const accent = accountAccents[groupIdx % accountAccents.length];
+                        const groupMV = group.holdings.reduce((s, h) => s + convertFrom(h.market_value || 0, h.currency || 'USD'), 0);
+                        const groupPl = group.holdings.reduce((s, h) => s + convertFrom(h.unrealized_pl || 0, h.currency || 'USD'), 0);
+                        const groupInvested = group.holdings.reduce((s, h) => s + convertFrom(h.total_invested || 0, h.currency || 'USD'), 0);
+                        const groupPlPct = groupInvested > 0 ? (groupPl / groupInvested) * 100 : 0;
 
-                                    return (
-                                        <tr key={h.asset_id} className="table-row border-b border-zinc-50 last:border-none">
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-100 to-zinc-50 flex items-center justify-center border border-zinc-200/50">
-                                                        <span className="text-[10px] font-black text-zinc-600">{h.symbol.slice(0, 2)}</span>
-                                                    </div>
-                                                    <div>
-                                                        <p className="font-bold text-sm text-zinc-900">{h.symbol}</p>
-                                                        <p className="text-[11px] text-zinc-400">{h.name}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="text-right px-6 py-4 font-semibold text-sm text-zinc-700">
-                                                {h.quantity}
-                                            </td>
-                                            <td className="text-right px-6 py-4 text-sm text-zinc-500">
-                                                {formatNative(h.avg_cost, h.currency || 'USD')}
-                                            </td>
-                                            <td className="text-right px-6 py-4 font-semibold text-sm text-zinc-900">
-                                                {h.current_price
-                                                    ? formatNative(h.current_price, h.currency || 'USD')
-                                                    : <span className="inline-block w-14 h-4 rounded animate-shimmer" />
-                                                }
-                                            </td>
-                                            <td className="text-right px-6 py-4 font-semibold text-sm text-zinc-900">
-                                                {h.market_value ? formatNative(h.market_value, h.currency || 'USD') : '---'}
-                                            </td>
-                                            <td className="text-right px-6 py-4">
-                                                {h.unrealized_pl !== undefined ? (
-                                                    <div className="flex items-center justify-end gap-1">
-                                                        {isProfit
-                                                            ? <ArrowUpRight size={13} className="text-emerald-500" />
-                                                            : <ArrowDownRight size={13} className="text-red-500" />
-                                                        }
-                                                        <p className={`font-bold text-sm ${isProfit ? 'text-emerald-600' : 'text-red-500'}`}>
-                                                            {isProfit ? '+' : '-'}{formatNative(Math.abs(h.unrealized_pl), h.currency || 'USD')}
-                                                        </p>
-                                                    </div>
-                                                ) : <span className="text-zinc-300">---</span>}
-                                            </td>
-                                            <td className="text-right px-6 py-4">
-                                                {h.unrealized_pl_pct !== undefined ? (
-                                                    <span className={`text-sm font-semibold ${isProfit ? 'text-emerald-600' : 'text-red-500'}`}>
-                                                        {isProfit ? '+' : ''}{h.unrealized_pl_pct.toFixed(2)}%
-                                                    </span>
-                                                ) : <span className="text-zinc-300">---</span>}
-                                            </td>
-                                            <td className="text-right px-6 py-4">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <div className="w-16 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
-                                                        <div
-                                                            className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500"
-                                                            style={{ width: `${Math.min(allocation, 100)}%` }}
-                                                        />
-                                                    </div>
-                                                    <span className="text-xs font-medium text-zinc-500 w-12 text-right">
-                                                        {allocation.toFixed(1)}%
-                                                    </span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
+                        return (
+                            <div key={group.account_id} className="card overflow-hidden p-0">
+                                {/* Account Header */}
+                                <div className="px-6 py-4 border-b border-zinc-100/80 flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-1 h-5 rounded-full bg-gradient-to-b ${accent.from} ${accent.to}`} />
+                                        <div className={`icon-badge ${accent.badge}`}>
+                                            <Building2 size={16} className={accent.text} />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-base font-bold text-zinc-900">{group.account_name}</h2>
+                                            <p className="text-[11px] text-zinc-400">{group.holdings.length} {group.holdings.length === 1 ? 'holding' : 'holdings'}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4 text-sm">
+                                        <span className="text-zinc-500">{t('holdings.total_market_value')}: <strong className="text-zinc-900">{format(groupMV)}</strong></span>
+                                        <span className={groupPl >= 0 ? 'text-emerald-600 font-bold' : 'text-red-500 font-bold'}>
+                                            {groupPl >= 0 ? '+' : ''}{format(Math.abs(groupPl))} ({groupPlPct >= 0 ? '+' : ''}{groupPlPct.toFixed(2)}%)
+                                        </span>
+                                    </div>
+                                </div>
 
-                    {/* Table Footer — Totals Row */}
-                    <div className="px-6 py-3 bg-zinc-50/50 border-t border-zinc-100/80 flex items-center justify-between text-sm">
-                        <span className="font-bold text-zinc-700">
-                            {holdings.length} {holdings.length === 1 ? 'holding' : 'holdings'}
-                        </span>
-                        <div className="flex items-center gap-6">
-                            <span className="text-zinc-500">{t('holdings.total_invested')}: <strong className="text-zinc-900">{format(totalInvested)}</strong></span>
-                            <span className="text-zinc-500">{t('holdings.total_market_value')}: <strong className="text-zinc-900">{format(totalMarketValue)}</strong></span>
-                            <span className={totalPl >= 0 ? 'text-emerald-600 font-bold' : 'text-red-500 font-bold'}>
-                                {totalPl >= 0 ? '+' : ''}{format(Math.abs(totalPl))} ({totalPlPct >= 0 ? '+' : ''}{totalPlPct.toFixed(2)}%)
-                            </span>
-                        </div>
-                    </div>
+                                {/* Holdings Table */}
+                                <div className="overflow-x-auto">
+                                    <table className="w-full">
+                                        <thead>
+                                            <tr className="text-[11px] text-zinc-400 uppercase tracking-wider border-b border-zinc-100/80">
+                                                <th className="text-left px-6 py-3 font-semibold">{t('holdings.symbol')}</th>
+                                                <th className="text-right px-6 py-3 font-semibold">{t('holdings.qty')}</th>
+                                                <th className="text-right px-6 py-3 font-semibold">{t('holdings.avg_cost')}</th>
+                                                <th className="text-right px-6 py-3 font-semibold">{t('holdings.current_price')}</th>
+                                                <th className="text-right px-6 py-3 font-semibold">{t('holdings.market_value')}</th>
+                                                <th className="text-right px-6 py-3 font-semibold">{t('holdings.pl')}</th>
+                                                <th className="text-right px-6 py-3 font-semibold">{t('holdings.pl_pct')}</th>
+                                                <th className="text-right px-6 py-3 font-semibold">{t('holdings.allocation')}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {group.holdings.map((h) => {
+                                                const isProfit = (h.unrealized_pl || 0) >= 0;
+                                                const allocation = totalMarketValue > 0
+                                                    ? (convertFrom(h.market_value || 0, h.currency || 'USD') / totalMarketValue * 100)
+                                                    : 0;
+
+                                                return (
+                                                    <tr key={`${h.account_id}-${h.asset_id}`} className="table-row border-b border-zinc-50 last:border-none">
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-100 to-zinc-50 flex items-center justify-center border border-zinc-200/50">
+                                                                    <span className="text-[10px] font-black text-zinc-600">{h.symbol.slice(0, 2)}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="font-bold text-sm text-zinc-900">{h.symbol}</p>
+                                                                    <p className="text-[11px] text-zinc-400">{h.name}</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="text-right px-6 py-4 font-semibold text-sm text-zinc-700">
+                                                            {h.quantity}
+                                                        </td>
+                                                        <td className="text-right px-6 py-4 text-sm text-zinc-500">
+                                                            {formatNative(h.avg_cost, h.currency || 'USD')}
+                                                        </td>
+                                                        <td className="text-right px-6 py-4 font-semibold text-sm text-zinc-900">
+                                                            {h.current_price
+                                                                ? formatNative(h.current_price, h.currency || 'USD')
+                                                                : <span className="inline-block w-14 h-4 rounded animate-shimmer" />
+                                                            }
+                                                        </td>
+                                                        <td className="text-right px-6 py-4 font-semibold text-sm text-zinc-900">
+                                                            {h.market_value ? formatNative(h.market_value, h.currency || 'USD') : '---'}
+                                                        </td>
+                                                        <td className="text-right px-6 py-4">
+                                                            {h.unrealized_pl !== undefined ? (
+                                                                <div className="flex items-center justify-end gap-1">
+                                                                    {isProfit
+                                                                        ? <ArrowUpRight size={13} className="text-emerald-500" />
+                                                                        : <ArrowDownRight size={13} className="text-red-500" />
+                                                                    }
+                                                                    <p className={`font-bold text-sm ${isProfit ? 'text-emerald-600' : 'text-red-500'}`}>
+                                                                        {isProfit ? '+' : '-'}{formatNative(Math.abs(h.unrealized_pl), h.currency || 'USD')}
+                                                                    </p>
+                                                                </div>
+                                                            ) : <span className="text-zinc-300">---</span>}
+                                                        </td>
+                                                        <td className="text-right px-6 py-4">
+                                                            {h.unrealized_pl_pct !== undefined ? (
+                                                                <span className={`text-sm font-semibold ${isProfit ? 'text-emerald-600' : 'text-red-500'}`}>
+                                                                    {isProfit ? '+' : ''}{h.unrealized_pl_pct.toFixed(2)}%
+                                                                </span>
+                                                            ) : <span className="text-zinc-300">---</span>}
+                                                        </td>
+                                                        <td className="text-right px-6 py-4">
+                                                            <div className="flex items-center justify-end gap-2">
+                                                                <div className="w-16 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+                                                                    <div
+                                                                        className={`h-full rounded-full bg-gradient-to-r ${accent.from} ${accent.to}`}
+                                                                        style={{ width: `${Math.min(allocation, 100)}%` }}
+                                                                    />
+                                                                </div>
+                                                                <span className="text-xs font-medium text-zinc-500 w-12 text-right">
+                                                                    {allocation.toFixed(1)}%
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {/* Account Footer */}
+                                <div className="px-6 py-3 bg-zinc-50/50 border-t border-zinc-100/80 flex items-center justify-between text-sm">
+                                    <span className="font-bold text-zinc-700">
+                                        {group.holdings.length} {group.holdings.length === 1 ? 'holding' : 'holdings'}
+                                    </span>
+                                    <div className="flex items-center gap-6">
+                                        <span className="text-zinc-500">{t('holdings.total_invested')}: <strong className="text-zinc-900">{format(groupInvested)}</strong></span>
+                                        <span className="text-zinc-500">{t('holdings.total_market_value')}: <strong className="text-zinc-900">{format(groupMV)}</strong></span>
+                                        <span className={groupPl >= 0 ? 'text-emerald-600 font-bold' : 'text-red-500 font-bold'}>
+                                            {groupPl >= 0 ? '+' : ''}{format(Math.abs(groupPl))} ({groupPlPct >= 0 ? '+' : ''}{groupPlPct.toFixed(2)}%)
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             ) : (
                 <div className="card text-center py-16">
