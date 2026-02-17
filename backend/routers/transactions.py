@@ -1,6 +1,7 @@
 """
 Transactions Router: CRUD operations for financial transactions.
 Handles balance updates on Deposit, Withdraw, Buy, Sell.
+Auto-creates Asset records when a symbol is provided for BUY/SELL.
 """
 from datetime import datetime
 from typing import List, Optional
@@ -10,7 +11,7 @@ from pydantic import BaseModel
 from sqlmodel import Session, select
 
 from database import get_session
-from models import Account, Transaction, TransactionType
+from models import Account, Asset, Transaction, TransactionType
 
 # ─── Request Schema ────────────────────────────────────────────────
 class TransactionCreate(BaseModel):
@@ -18,6 +19,7 @@ class TransactionCreate(BaseModel):
     type: TransactionType
     account_id: int
     asset_id: Optional[int] = None
+    symbol: Optional[str] = None      # NEW: e.g. "AAPL", "0700.HK"
     quantity: Optional[float] = None
     price: Optional[float] = None
     fee: Optional[float] = None
@@ -32,6 +34,19 @@ router = APIRouter(
 )
 
 
+def _resolve_asset(session: Session, symbol: str) -> Asset:
+    """Look up an existing Asset by symbol, or auto-create one."""
+    statement = select(Asset).where(Asset.symbol == symbol)
+    asset = session.exec(statement).first()
+    if asset:
+        return asset
+    # Auto-create
+    asset = Asset(symbol=symbol, name=symbol, type="STOCK")
+    session.add(asset)
+    session.flush()          # get the id without committing
+    return asset
+
+
 @router.post("/", response_model=Transaction)
 def create_transaction(
     payload: TransactionCreate,
@@ -42,7 +57,14 @@ def create_transaction(
     if not account:
         raise HTTPException(status_code=404, detail="Account not found")
 
-    # 2. Balance logic
+    # 2. Resolve asset_id from symbol for BUY/SELL
+    asset_id = payload.asset_id
+    if payload.type in (TransactionType.BUY, TransactionType.SELL):
+        if payload.symbol and not asset_id:
+            asset = _resolve_asset(session, payload.symbol.upper())
+            asset_id = asset.id
+
+    # 3. Balance logic
     if payload.type == TransactionType.DEPOSIT:
         account.balance += payload.total
     elif payload.type == TransactionType.WITHDRAW:
@@ -56,12 +78,12 @@ def create_transaction(
     elif payload.type == TransactionType.SELL:
         account.balance += payload.total
 
-    # 3. Create transaction record
+    # 4. Create transaction record
     transaction = Transaction(
         date=payload.date,
         type=payload.type,
         account_id=payload.account_id,
-        asset_id=payload.asset_id,
+        asset_id=asset_id,
         quantity=payload.quantity,
         price=payload.price,
         fee=payload.fee,

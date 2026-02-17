@@ -2,14 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Wallet, Activity, PieChart, Briefcase, Settings, Globe, ChevronDown } from 'lucide-react';
+import { Home, Wallet, Activity, PieChart, Briefcase, Settings } from 'lucide-react';
 import { useI18n } from '@/context/I18nContext';
-import { useCurrency, Currency } from '@/context/CurrencyContext';
 
 export default function Sidebar() {
     const pathname = usePathname();
-    const { locale, setLocale, t } = useI18n();
-    const { currency, setCurrency, currencies } = useCurrency();
+    const { t } = useI18n();
 
     const navItems = [
         { href: '/', labelKey: 'nav.dashboard', icon: Home },
@@ -64,49 +62,6 @@ export default function Sidebar() {
                 })}
             </nav>
 
-            {/* Controls */}
-            <div className="px-3 pb-2 space-y-1.5">
-                {/* Language */}
-                <div className="flex items-center gap-2 px-2 py-1.5">
-                    <Globe size={14} className="text-zinc-600" />
-                    <div className="flex flex-1 rounded-md overflow-hidden border border-zinc-800 bg-zinc-900/50">
-                        <button
-                            onClick={() => setLocale('en')}
-                            className={`flex-1 text-[11px] py-1 font-medium transition-smooth cursor-pointer ${locale === 'en'
-                                ? 'bg-indigo-500/20 text-indigo-400'
-                                : 'text-zinc-600 hover:text-zinc-400'
-                                }`}
-                        >
-                            EN
-                        </button>
-                        <button
-                            onClick={() => setLocale('zh')}
-                            className={`flex-1 text-[11px] py-1 font-medium transition-smooth cursor-pointer ${locale === 'zh'
-                                ? 'bg-indigo-500/20 text-indigo-400'
-                                : 'text-zinc-600 hover:text-zinc-400'
-                                }`}
-                        >
-                            中文
-                        </button>
-                    </div>
-                </div>
-
-                {/* Currency */}
-                <div className="flex items-center gap-2 px-2 py-1.5">
-                    <ChevronDown size={14} className="text-zinc-600" />
-                    <select
-                        value={currency}
-                        onChange={(e) => setCurrency(e.target.value as Currency)}
-                        className="flex-1 bg-zinc-900/50 border border-zinc-800 rounded-md text-[11px] text-zinc-400 py-1 px-2 cursor-pointer focus:outline-none focus:border-indigo-500/50 appearance-none"
-                    >
-                        {currencies.map((c) => (
-                            <option key={c} value={c} className="bg-zinc-900 text-zinc-300">{c}</option>
-                        ))}
-                    </select>
-                    <span className="text-[10px] text-zinc-600">{t('currency.settlement')}</span>
-                </div>
-            </div>
-
             {/* Divider */}
             <div className="mx-4 h-px bg-gradient-to-r from-transparent via-zinc-700/50 to-transparent" />
 
@@ -114,8 +69,15 @@ export default function Sidebar() {
             <div className="p-3">
                 <Link
                     href="/settings"
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-smooth text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300 group"
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-smooth group relative
+                        ${pathname === '/settings'
+                            ? 'bg-white/[0.08] text-white'
+                            : 'text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300'
+                        }`}
                 >
+                    {pathname === '/settings' && (
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-r-full bg-gradient-to-b from-indigo-400 to-violet-400" />
+                    )}
                     <Settings size={18} className="group-hover:rotate-90 transition-all duration-500" />
                     <span className="font-medium text-[13px]">{t('nav.settings')}</span>
                 </Link>

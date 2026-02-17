@@ -98,6 +98,14 @@ export const translations: Record<Locale, Record<string, string>> = {
 
         // Currency
         'currency.settlement': 'Settlement Currency',
+
+        // Settings
+        'settings.title': 'Settings',
+        'settings.subtitle': 'Manage your preferences.',
+        'settings.language': 'Language',
+        'settings.language_desc': 'Choose your preferred interface language.',
+        'settings.currency': 'Settlement Currency',
+        'settings.currency_desc': 'Select the currency used to display converted amounts.',
     },
     zh: {
         // Sidebar
@@ -196,5 +204,13 @@ export const translations: Record<Locale, Record<string, string>> = {
 
         // Currency
         'currency.settlement': '結算貨幣',
+
+        // Settings
+        'settings.title': '設定',
+        'settings.subtitle': '管理您的偏好設定。',
+        'settings.language': '語言',
+        'settings.language_desc': '選擇您偏好的介面語言。',
+        'settings.currency': '結算貨幣',
+        'settings.currency_desc': '選擇用於顯示換算後金額的貨幣單位。',
     },
 };

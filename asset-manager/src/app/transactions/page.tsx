@@ -68,7 +68,7 @@ export default function TransactionsPage() {
                 type: txType, account_id: accountId, total: parseFloat(total),
                 date: new Date(txDate + 'T00:00:00').toISOString(), notes: notes || null,
             };
-            if (isTradeType) { payload.quantity = parseFloat(quantity); payload.price = parseFloat(price); }
+            if (isTradeType) { payload.quantity = parseFloat(quantity); payload.price = parseFloat(price); payload.symbol = symbol; }
             await api.post('/transactions/', payload);
             const txLabel = txTypes.find(tx => tx.value === txType)?.label || txType;
             setSuccess(`${txLabel} $${total} ${t('tx.success')}`);
