@@ -62,6 +62,8 @@ export const translations: Record<Locale, Record<string, string>> = {
         'tx.no_transactions_desc': 'Use the form above to record your first transaction.',
         'tx.success': 'recorded successfully!',
         'tx.insufficient': 'Insufficient funds',
+        'tx.tags': 'Tags (Optional)',
+        'tx.tags_placeholder': 'e.g. Tech, China, Growth',
 
         // Analytics
         'analytics.title': 'Analytics',
@@ -106,6 +108,11 @@ export const translations: Record<Locale, Record<string, string>> = {
         'settings.language_desc': 'Choose your preferred interface language.',
         'settings.currency': 'Settlement Currency',
         'settings.currency_desc': 'Select the currency used to display converted amounts.',
+        'settings.data_mgmt': 'Data Management',
+        'settings.data_mgmt_desc': 'Rebuild portfolio history from past transactions.',
+        'settings.start_date': 'Start Date',
+        'settings.rebuild_history': 'Rebuild Portfolio History',
+        'settings.rebuilding': 'Rebuilding...',
     },
     zh: {
         // Sidebar
@@ -167,7 +174,9 @@ export const translations: Record<Locale, Record<string, string>> = {
         'tx.no_transactions': '尚無交易紀錄',
         'tx.no_transactions_desc': '使用上方表單紀錄您的第一筆交易。',
         'tx.success': '紀錄成功！',
-        'tx.insufficient': '餘額不足',
+        'tx.insufficient': '額不足',
+        'tx.tags': '標籤 (選填)',
+        'tx.tags_placeholder': '例如：科技股, 中概股, 成長型',
 
         // Analytics
         'analytics.title': '投資分析',
@@ -212,5 +221,10 @@ export const translations: Record<Locale, Record<string, string>> = {
         'settings.language_desc': '選擇您偏好的介面語言。',
         'settings.currency': '結算貨幣',
         'settings.currency_desc': '選擇用於顯示換算後金額的貨幣單位。',
+        'settings.data_mgmt': '資料管理',
+        'settings.data_mgmt_desc': '從過去的交易記錄重建投資組合歷史。',
+        'settings.start_date': '起始日期',
+        'settings.rebuild_history': '重建投資組合歷史',
+        'settings.rebuilding': '重建中...',
     },
 };

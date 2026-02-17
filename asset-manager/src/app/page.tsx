@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import Link from 'next/link';
-import { ArrowUpRight, DollarSign, Wallet, TrendingUp, Sparkles } from 'lucide-react';
+import { ArrowUpRight, DollarSign, Wallet, TrendingUp, Sparkles, PieChart as PieIcon, Activity } from 'lucide-react';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency } from '@/context/CurrencyContext';
+import AllocationChart from '@/components/dashboard/AllocationChart';
+import NetWorthChart from '@/components/dashboard/NetWorthChart';
 
 interface Account {
   id: number;
@@ -15,29 +17,72 @@ interface Account {
   balance: number;
 }
 
+interface PortfolioSummary {
+  total_invested: number;
+  total_market_value: number;
+  total_cash: number;
+  total_equity: number;
+  holdings: { symbol: string; market_value: number; tags?: string }[];
+}
+
+interface PortfolioSnapshot {
+  date: string;
+  total_equity: number;
+}
+
 export default function Dashboard() {
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [summary, setSummary] = useState<PortfolioSummary | null>(null);
+  const [history, setHistory] = useState<PortfolioSnapshot[]>([]);
   const [loading, setLoading] = useState(true);
+
   const { t } = useI18n();
   const { format, convertFrom, formatFrom, symbol: currSymbol } = useCurrency();
 
   useEffect(() => {
+    // 1. Fetch Accounts
     api.get('/accounts/')
       .then(res => setAccounts(res.data))
-      .catch(err => console.error('Failed to load accounts', err))
+      .catch(err => console.error('Failed to load accounts', err));
+
+    // 2. Fetch Portfolio Summary (Trigger Snapshot) -> Then History
+    api.get('/portfolio/summary')
+      .then(res => {
+        setSummary(res.data);
+        // Fetch history after snapshot is potentially created
+        return api.get('/portfolio/history');
+      })
+      .then(res => setHistory(res.data))
+      .catch(err => console.error('Failed to load portfolio data', err))
       .finally(() => setLoading(false));
   }, []);
 
   const totalBalance = accounts.reduce((acc, curr) => acc + convertFrom(curr.balance || 0, curr.currency), 0);
+  const totalEquity = summary?.total_equity ? convertFrom(summary.total_equity, 'USD') : totalBalance; // Summary is in USD usually
+
+  // Prepare Chart Data
+  const allocationData = summary?.holdings.map(h => ({
+    name: h.symbol,
+    value: convertFrom(h.market_value, 'USD') // Convert USD market value to display currency
+  })) || [];
+
+  const historyData = history.map(h => ({
+    date: h.date,
+    value: convertFrom(h.total_equity, 'USD')
+  }));
+
   const bankAccounts = accounts.filter(a => a.type === 'BANK');
   const investAccounts = accounts.filter(a => a.type === 'STOCK' || a.type === 'CRYPTO');
+
+  // Use Summary data if available for stats (More accurate with market value)
+  const displayNetWorth = summary ? totalEquity : totalBalance;
 
   const stats = [
     {
       title: t('dashboard.net_worth'),
-      value: `${currSymbol}${totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      value: `${currSymbol}${displayNetWorth.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       icon: DollarSign,
-      change: '+2.5%',
+      change: '+2.5%', // Placeholder for now (calc from history later)
       changePositive: true,
       gradient: 'from-indigo-500 to-violet-500',
       softBg: 'bg-indigo-50',
@@ -106,13 +151,25 @@ export default function Dashboard() {
         })}
       </div>
 
-      {/* Market Overview */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-1 h-5 rounded-full bg-gradient-to-b from-indigo-500 to-violet-500" />
-          <h2 className="text-lg font-bold text-zinc-900">{t('dashboard.market_overview')}</h2>
+      {/* Charts Section (New) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Net Worth Trend (2/3) */}
+        <div className="lg:col-span-2 card min-h-[350px]">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-1 h-5 rounded-full bg-gradient-to-b from-indigo-500 to-blue-500" />
+            <h2 className="text-lg font-bold text-zinc-900">Total Asset Trend</h2>
+          </div>
+          <NetWorthChart data={historyData} />
         </div>
-        <MarketTicker symbols={['AAPL', 'TSLA', 'MSFT', 'BTC-USD', 'ETH-USD', '0700.HK']} />
+
+        {/* Allocation (1/3) */}
+        <div className="card min-h-[350px]">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-1 h-5 rounded-full bg-gradient-to-b from-purple-500 to-pink-500" />
+            <h2 className="text-lg font-bold text-zinc-900">Allocation</h2>
+          </div>
+          <AllocationChart data={allocationData} />
+        </div>
       </div>
 
       {/* Accounts Preview */}
@@ -156,34 +213,6 @@ export default function Dashboard() {
           </Link>
         </div>
       )}
-    </div>
-  );
-}
-
-function MarketTicker({ symbols }: { symbols: string[] }) {
-  const [prices, setPrices] = useState<Record<string, number>>({});
-  const { format } = useCurrency();
-
-  useEffect(() => {
-    symbols.forEach(symbol => {
-      api.get(`/market/price/${symbol}`).then(res => {
-        setPrices(prev => ({ ...prev, [symbol]: res.data.price }));
-      });
-    });
-  }, [symbols]);
-
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-      {symbols.map(symbol => (
-        <div key={symbol} className="card p-4 text-center group cursor-pointer">
-          <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">{symbol}</p>
-          <p className={`text-base font-extrabold tracking-tight ${prices[symbol] ? 'text-zinc-900' : ''}`}>
-            {prices[symbol] ? format(prices[symbol]) : (
-              <span className="inline-block w-16 h-5 rounded animate-shimmer" />
-            )}
-          </p>
-        </div>
-      ))}
     </div>
   );
 }

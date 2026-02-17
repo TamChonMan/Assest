@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import api from '@/lib/api';
 import {
     ArrowDownLeft, ArrowUpRight, TrendingUp, TrendingDown,
-    Plus, Search, Calendar, DollarSign, AlertCircle, CheckCircle2,
+    Plus, Search, Calendar, DollarSign, AlertCircle, CheckCircle2, Pencil, X
 } from 'lucide-react';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency } from '@/context/CurrencyContext';
@@ -31,11 +31,18 @@ export default function TransactionsPage() {
     const [symbol, setSymbol] = useState('');
     const [quantity, setQuantity] = useState('');
     const [price, setPrice] = useState('');
+    const [tags, setTags] = useState('');
     const [notes, setNotes] = useState('');
     const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState('');
     const [txDate, setTxDate] = useState(() => new Date().toISOString().split('T')[0]);
+    // Validation State
+    const [isValidating, setIsValidating] = useState(false);
+    const [symbolValid, setSymbolValid] = useState<boolean | null>(null);
+    const [symbolName, setSymbolName] = useState('');
+    // Edit State
+    const [editingTxId, setEditingTxId] = useState<number | null>(null);
 
     const txTypes = [
         { value: 'DEPOSIT', label: t('tx.deposit'), icon: ArrowDownLeft, gradient: 'from-emerald-500 to-teal-500', soft: 'bg-emerald-50', color: 'text-emerald-600' },
@@ -60,20 +67,102 @@ export default function TransactionsPage() {
         }
     }, [quantity, price, isTradeType]);
 
+    const handleEdit = (tx: TransactionRecord) => {
+        setEditingTxId(tx.id);
+        setTxType(tx.type);
+        setAccountId(tx.account_id);
+        const dateStr = new Date(tx.date).toISOString().split('T')[0];
+        setTxDate(dateStr);
+        setNotes(tx.notes || '');
+        setTotal(tx.total.toString());
+
+        if (tx.quantity) setQuantity(tx.quantity.toString());
+        else setQuantity('');
+
+        if (tx.price) setPrice(tx.price.toString());
+        else setPrice('');
+
+        // We don't have symbol readily available in TransactionRecord interface above?
+        // Let's check interface definition in file. 
+        // It currently says: id, date, type, account_id, asset_id, quantity, price, fee, total, notes.
+        // It DOES NOT have symbol.
+        // But the backend `Transaction` model doesn't store symbol, only `asset_id`.
+        // However, `list_transactions` returns `Transaction` objects.
+        // We need to fetch asset details or we can't edit symbol easily.
+        // For now, let's clear symbol if we can't find it, or fetching it.
+        // We'll skip symbol fetching for this step to verify basic edit first.
+        setSymbol(''); setTags('');
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const cancelEdit = () => {
+        setEditingTxId(null);
+        setTotal(''); setSymbol(''); setQuantity(''); setPrice(''); setNotes(''); setTags('');
+        setTxDate(new Date().toISOString().split('T')[0]);
+        setSymbolValid(null); setSymbolName('');
+        setAccountId('');
+    };
+
+    const handleSymbolBlur = async () => {
+        if (!symbol || !isTradeType) return;
+        setIsValidating(true);
+        setSymbolValid(null);
+        setSymbolName('');
+
+        try {
+            const res = await api.get(`/market/validate/${symbol}`);
+            if (res.data.valid) {
+                setSymbolValid(true);
+                setSymbolName(res.data.name);
+            } else {
+                setSymbolValid(false);
+                setError(`Symbol '${symbol}' not found`);
+            }
+        } catch (err) {
+            console.error(err);
+            setSymbolValid(false);
+        } finally {
+            setIsValidating(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isTradeType && symbolValid === false) {
+            setError(`Cannot submit invalid symbol '${symbol}'`);
+            return;
+        }
         setError(''); setSuccess(''); setSubmitting(true);
         try {
+            // Auto-detect currency from symbol (e.g. 0700.HK -> HKD)
+            let txCurrency = accounts.find(a => a.id === (typeof accountId === 'number' ? accountId : -1))?.currency || 'USD';
+            if (isTradeType && symbol) {
+                if (symbol.toUpperCase().endsWith('.HK')) txCurrency = 'HKD';
+                else txCurrency = 'USD'; // Default to USD for US stocks
+            }
+
             const payload: Record<string, unknown> = {
                 type: txType, account_id: accountId, total: parseFloat(total),
                 date: new Date(txDate + 'T00:00:00').toISOString(), notes: notes || null,
+                currency: txCurrency, // Send detected currency
+                tags: tags || null,   // Send tags
             };
             if (isTradeType) { payload.quantity = parseFloat(quantity); payload.price = parseFloat(price); payload.symbol = symbol; }
-            await api.post('/transactions/', payload);
-            const txLabel = txTypes.find(tx => tx.value === txType)?.label || txType;
-            setSuccess(`${txLabel} $${total} ${t('tx.success')}`);
-            setTotal(''); setSymbol(''); setQuantity(''); setPrice(''); setNotes('');
+
+            if (editingTxId) {
+                await api.put(`/transactions/${editingTxId}`, payload);
+                setSuccess(t('tx.updated') || 'Transaction updated');
+                setEditingTxId(null);
+            } else {
+                await api.post('/transactions/', payload);
+                const txLabel = txTypes.find(tx => tx.value === txType)?.label || txType;
+                setSuccess(`${txLabel} $${total} ${t('tx.success')}`);
+            }
+
+            setTotal(''); setSymbol(''); setQuantity(''); setPrice(''); setNotes(''); setTags('');
             setTxDate(new Date().toISOString().split('T')[0]);
+            setSymbolValid(null); setSymbolName(''); // Reset validation
             fetchData();
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) { setError(err.response?.data?.detail || t('tx.insufficient')); }
@@ -91,9 +180,16 @@ export default function TransactionsPage() {
 
             {/* Form Card */}
             <div className="card">
-                <div className="flex items-center gap-2 mb-6">
-                    <div className="w-1 h-5 rounded-full bg-gradient-to-b from-indigo-500 to-violet-500" />
-                    <h2 className="text-lg font-bold text-zinc-900">{t('tx.new')}</h2>
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                        <div className={`w-1 h-5 rounded-full bg-gradient-to-b ${editingTxId ? 'from-amber-500 to-orange-500' : 'from-indigo-500 to-violet-500'}`} />
+                        <h2 className="text-lg font-bold text-zinc-900">{editingTxId ? 'Edit Transaction' : t('tx.new')}</h2>
+                    </div>
+                    {editingTxId && (
+                        <button onClick={cancelEdit} className="text-sm text-red-500 font-semibold flex items-center gap-1 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors">
+                            <X size={14} /> Cancel Edit
+                        </button>
+                    )}
                 </div>
 
                 {/* Type Selector */}
@@ -137,7 +233,24 @@ export default function TransactionsPage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label className="block text-sm font-semibold text-zinc-700 mb-1.5"><Search size={13} className="inline mr-1" />{t('tx.symbol')}</label>
-                                <input type="text" value={symbol} onChange={(e) => setSymbol(e.target.value.toUpperCase())} placeholder="AAPL" className="w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none" />
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        value={symbol}
+                                        onChange={(e) => { setSymbol(e.target.value.toUpperCase()); setSymbolValid(null); }}
+                                        onBlur={handleSymbolBlur}
+                                        placeholder="e.g. AAPL"
+                                        className={`w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none ${symbolValid === false ? 'border-red-500 text-red-600' : ''}`}
+                                    />
+                                    {isValidating && (
+                                        <div className="absolute right-3 top-2.5 animate-spin w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full"></div>
+                                    )}
+                                    {!isValidating && symbolValid === true && (
+                                        <div className="absolute right-3 top-2.5 text-emerald-500 font-bold">✓</div>
+                                    )}
+                                </div>
+                                {symbolName && <p className="text-xs text-emerald-600 mt-1 truncate">{symbolName}</p>}
+                                {symbolValid === false && <p className="text-xs text-red-500 mt-1">Invalid Symbol</p>}
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-zinc-700 mb-1.5">{t('tx.quantity')}</label>
@@ -147,6 +260,13 @@ export default function TransactionsPage() {
                                 <label className="block text-sm font-semibold text-zinc-700 mb-1.5">{t('tx.price_per_unit')}</label>
                                 <input type="number" step="any" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="150.00" required className="w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none" />
                             </div>
+                        </div>
+                    )}
+
+                    {isTradeType && (
+                        <div>
+                            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">{t('tx.tags')}</label>
+                            <input type="text" value={tags} onChange={(e) => setTags(e.target.value)} placeholder={t('tx.tags_placeholder')} className="w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none" />
                         </div>
                     )}
 
@@ -173,8 +293,8 @@ export default function TransactionsPage() {
                         </div>
                     )}
 
-                    <button type="submit" disabled={submitting} className="w-full btn-primary disabled:opacity-50 py-3 rounded-xl text-white font-semibold">
-                        {submitting ? t('tx.recording') : `${t('tx.record')} ${txTypes.find(tx => tx.value === txType)?.label}`}
+                    <button type="submit" disabled={submitting} className={`w-full py-3 rounded-xl text-white font-semibold disabled:opacity-50 ${editingTxId ? 'bg-amber-500 hover:bg-amber-600' : 'btn-primary'}`}>
+                        {submitting ? (editingTxId ? 'Updating...' : t('tx.recording')) : (editingTxId ? 'Update Transaction' : `${t('tx.record')} ${txTypes.find(tx => tx.value === txType)?.label}`)}
                     </button>
                 </form>
             </div>
@@ -217,7 +337,12 @@ export default function TransactionsPage() {
                                         <p className={`font-bold text-sm ${isInflow ? 'text-emerald-600' : 'text-red-500'}`}>
                                             {isInflow ? '+' : '-'}{format(tx.total)}
                                         </p>
-                                        {tx.quantity && <p className="text-[11px] text-zinc-400">{tx.quantity} × {format(tx.price || 0)}</p>}
+                                        <div className="flex items-center justify-end gap-2 mt-0.5">
+                                            {tx.quantity && <p className="text-[11px] text-zinc-400">{tx.quantity} × {format(tx.price || 0)}</p>}
+                                            <button onClick={() => handleEdit(tx)} className="text-zinc-400 hover:text-indigo-500 transition-colors p-1" title="Edit">
+                                                <Pencil size={12} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             );

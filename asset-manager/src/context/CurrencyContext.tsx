@@ -38,6 +38,8 @@ interface CurrencyContextType {
     convertFrom: (amount: number, fromCurrency: string) => number;
     /** Format amount from sourceCurrency → selected currency */
     formatFrom: (amount: number, fromCurrency: string) => string;
+    /** Format amount in its native currency (no conversion) */
+    formatNative: (amount: number, nativeCurrency: string) => string;
     symbol: string;
     currencies: Currency[];
 }
@@ -49,6 +51,7 @@ const CurrencyContext = createContext<CurrencyContextType>({
     format: (v) => `$${v.toFixed(2)}`,
     convertFrom: (v) => v,
     formatFrom: (v) => `$${v.toFixed(2)}`,
+    formatNative: (v) => `$${v.toFixed(2)}`,
     symbol: '$',
     currencies: [],
 });
@@ -87,6 +90,18 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         })}`;
     };
 
+    /**
+     * Format amount in its native/original currency (no conversion).
+     * E.g., formatNative(534.5, 'HKD') → 'HK$534.50'
+     */
+    const formatNative = (amount: number, nativeCurrency: string): string => {
+        const sym = CURRENCY_SYMBOLS[nativeCurrency] || nativeCurrency;
+        return `${sym}${amount.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        })}`;
+    };
+
     return (
         <CurrencyContext.Provider
             value={{
@@ -96,6 +111,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
                 format,
                 convertFrom,
                 formatFrom,
+                formatNative,
                 symbol: CURRENCY_SYMBOLS[currency] || currency,
                 currencies: Object.keys(EXCHANGE_RATES) as Currency[],
             }}

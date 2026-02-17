@@ -33,6 +33,8 @@ class Asset(SQLModel, table=True):
     symbol: str = Field(unique=True, index=True)
     name: Optional[str] = None
     type: str
+    currency: str = Field(default="USD")  # Trading currency (e.g., HKD, USD)
+    tags: Optional[str] = None  # Comma-separated tags e.g. "Tech,China"
 
     transactions: List["Transaction"] = Relationship(back_populates="asset")
     prices: List["PriceHistory"] = Relationship(back_populates="asset")
@@ -65,3 +67,13 @@ class PriceHistory(SQLModel, table=True):
     asset: Asset = Relationship(back_populates="prices")
     date: datetime
     price: float
+
+class PortfolioSnapshot(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    date: datetime = Field(index=True)     # Snapshot date (usually midnight)
+    total_equity: float                    # Total value in settlement currency
+    total_cash: Optional[float] = None     # Cash portion of equity
+    total_invested: Optional[float] = None # Net deposits (cash in - cash out)
+    holdings_count: Optional[int] = None   # Number of distinct holdings
+    currency: str = Field(default="USD")   # Currency of the snapshot
+    created_at: datetime = Field(default_factory=datetime.utcnow)

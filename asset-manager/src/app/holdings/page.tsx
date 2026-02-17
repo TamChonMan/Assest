@@ -13,6 +13,7 @@ interface Holding {
     asset_id: number;
     symbol: string;
     name: string;
+    currency: string;
     quantity: number;
     avg_cost: number;
     total_invested: number;
@@ -33,7 +34,7 @@ export default function HoldingsPage() {
     const [loading, setLoading] = useState(true);
     const [totalInvested, setTotalInvested] = useState(0);
     const { t } = useI18n();
-    const { format } = useCurrency();
+    const { format, convertFrom, formatNative } = useCurrency();
 
     useEffect(() => {
         api.get('/portfolio/summary')
@@ -44,9 +45,11 @@ export default function HoldingsPage() {
                 // Enrich with live market data
                 const enriched = await Promise.all(
                     data.holdings.map(async (h) => {
+                        const holdingCurrency = h.currency || 'USD';
                         try {
                             const priceRes = await api.get(`/market/price/${h.symbol}`);
                             const currentPrice = priceRes.data.price;
+                            const priceCurrency = priceRes.data.currency || holdingCurrency;
                             const marketValue = currentPrice * h.quantity;
                             const unrealizedPl = marketValue - h.total_invested;
                             const unrealizedPlPct = h.total_invested > 0
@@ -54,13 +57,14 @@ export default function HoldingsPage() {
                                 : 0;
                             return {
                                 ...h,
+                                currency: priceCurrency,
                                 current_price: currentPrice,
                                 market_value: marketValue,
                                 unrealized_pl: unrealizedPl,
                                 unrealized_pl_pct: unrealizedPlPct,
                             };
                         } catch {
-                            return h;
+                            return { ...h, currency: holdingCurrency };
                         }
                     })
                 );
@@ -70,9 +74,10 @@ export default function HoldingsPage() {
             .finally(() => setLoading(false));
     }, []);
 
-    const totalMarketValue = holdings.reduce((sum, h) => sum + (h.market_value || 0), 0);
-    const totalPl = holdings.reduce((sum, h) => sum + (h.unrealized_pl || 0), 0);
-    const totalPlPct = totalInvested > 0 ? (totalPl / totalInvested) * 100 : 0;
+    const totalMarketValue = holdings.reduce((sum, h) => sum + convertFrom(h.market_value || 0, h.currency || 'USD'), 0);
+    const totalPl = holdings.reduce((sum, h) => sum + convertFrom(h.unrealized_pl || 0, h.currency || 'USD'), 0);
+    const totalInvestedConverted = holdings.reduce((sum, h) => sum + convertFrom(h.total_invested || 0, h.currency || 'USD'), 0);
+    const totalPlPct = totalInvestedConverted > 0 ? (totalPl / totalInvestedConverted) * 100 : 0;
 
     if (loading) {
         return (
@@ -194,16 +199,16 @@ export default function HoldingsPage() {
                                                 {h.quantity}
                                             </td>
                                             <td className="text-right px-6 py-4 text-sm text-zinc-500">
-                                                {format(h.avg_cost)}
+                                                {formatNative(h.avg_cost, h.currency || 'USD')}
                                             </td>
                                             <td className="text-right px-6 py-4 font-semibold text-sm text-zinc-900">
                                                 {h.current_price
-                                                    ? format(h.current_price)
+                                                    ? formatNative(h.current_price, h.currency || 'USD')
                                                     : <span className="inline-block w-14 h-4 rounded animate-shimmer" />
                                                 }
                                             </td>
                                             <td className="text-right px-6 py-4 font-semibold text-sm text-zinc-900">
-                                                {h.market_value ? format(h.market_value) : '---'}
+                                                {h.market_value ? formatNative(h.market_value, h.currency || 'USD') : '---'}
                                             </td>
                                             <td className="text-right px-6 py-4">
                                                 {h.unrealized_pl !== undefined ? (
@@ -213,7 +218,7 @@ export default function HoldingsPage() {
                                                             : <ArrowDownRight size={13} className="text-red-500" />
                                                         }
                                                         <p className={`font-bold text-sm ${isProfit ? 'text-emerald-600' : 'text-red-500'}`}>
-                                                            {isProfit ? '+' : '-'}{format(Math.abs(h.unrealized_pl))}
+                                                            {isProfit ? '+' : '-'}{formatNative(Math.abs(h.unrealized_pl), h.currency || 'USD')}
                                                         </p>
                                                     </div>
                                                 ) : <span className="text-zinc-300">---</span>}

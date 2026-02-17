@@ -1,6 +1,8 @@
 'use client';
 
-import { Sparkles, Globe, Coins } from 'lucide-react';
+import { useState } from 'react';
+import { Sparkles, Globe, Coins, History, RefreshCw } from 'lucide-react';
+import api from '@/lib/api';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency, Currency } from '@/context/CurrencyContext';
 
@@ -81,6 +83,70 @@ export default function SettingsPage() {
                         </button>
                     ))}
                 </div>
+            </div>
+
+            {/* Data Management Card */}
+            <DataManagementCard />
+        </div>
+    );
+}
+
+function DataManagementCard() {
+    const { t } = useI18n();
+    const [startDate, setStartDate] = useState('2020-01-01');
+    const [rebuilding, setRebuilding] = useState(false);
+    const [result, setResult] = useState<string | null>(null);
+
+    const handleRebuild = async () => {
+        setRebuilding(true);
+        setResult(null);
+        try {
+            await api.post(`/analytics/rebuild-history?start_date=${startDate}`);
+            setResult('✅ History rebuilt successfully!');
+        } catch (err: any) {
+            setResult(`❌ Error: ${err.message}`);
+        } finally {
+            setRebuilding(false);
+        }
+    };
+
+    return (
+        <div className="card">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="icon-badge bg-amber-50">
+                    <History size={18} className="text-amber-500" />
+                </div>
+                <div>
+                    <h2 className="font-bold text-zinc-900">{t('settings.data_mgmt') || 'Data Management'}</h2>
+                    <p className="text-xs text-zinc-500">{t('settings.data_mgmt_desc') || 'Rebuild portfolio history from past transactions'}</p>
+                </div>
+            </div>
+            <div className="space-y-3">
+                <div>
+                    <label className="text-xs font-medium text-zinc-500 mb-1 block">{t('settings.start_date') || 'Start Date'}</label>
+                    <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="input-field w-full"
+                    />
+                </div>
+                <button
+                    onClick={handleRebuild}
+                    disabled={rebuilding}
+                    className="btn-primary w-full flex items-center justify-center gap-2"
+                >
+                    {rebuilding ? (
+                        <><RefreshCw size={14} className="animate-spin" /> {t('settings.rebuilding') || 'Rebuilding...'}</>
+                    ) : (
+                        <><RefreshCw size={14} /> {t('settings.rebuild_history') || 'Rebuild Portfolio History'}</>
+                    )}
+                </button>
+                {result && (
+                    <p className={`text-sm font-medium ${result.startsWith('✅') ? 'text-emerald-600' : 'text-red-500'}`}>
+                        {result}
+                    </p>
+                )}
             </div>
         </div>
     );

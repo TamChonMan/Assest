@@ -5,7 +5,7 @@ from typing import List
 
 from database import create_db_and_tables, get_session
 from models import Account, Asset, Transaction, AccountType
-from routers import market, transactions, portfolio
+from routers import market, transactions, portfolio, analytics
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,6 +31,7 @@ def read_root():
 app.include_router(market.router)
 app.include_router(transactions.router)
 app.include_router(portfolio.router)
+app.include_router(analytics.router)
 
 @app.post("/accounts/", response_model=Account)
 def create_account(account: Account, session: Session = Depends(get_session)):
