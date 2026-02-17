@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import Link from 'next/link';
 import { ArrowUpRight, DollarSign, Wallet, TrendingUp } from 'lucide-react';
+import { useI18n } from '@/context/I18nContext';
+import { useCurrency } from '@/context/CurrencyContext';
 
 interface Account {
   id: number;
@@ -16,6 +18,8 @@ interface Account {
 export default function Dashboard() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useI18n();
+  const { format } = useCurrency();
 
   useEffect(() => {
     api.get('/accounts/')
@@ -30,8 +34,8 @@ export default function Dashboard() {
 
   const stats = [
     {
-      title: 'Net Worth',
-      value: `$${totalBalance.toLocaleString()}`,
+      title: t('dashboard.net_worth'),
+      value: format(totalBalance),
       icon: DollarSign,
       change: '+2.5%',
       changeColor: 'text-emerald-600',
@@ -39,19 +43,19 @@ export default function Dashboard() {
       iconColor: 'text-blue-600',
     },
     {
-      title: 'Bank Accounts',
+      title: t('dashboard.bank_accounts'),
       value: bankAccounts.length.toString(),
       icon: Wallet,
-      change: `${bankAccounts.length} active`,
+      change: `${bankAccounts.length} ${t('dashboard.active')}`,
       changeColor: 'text-slate-500',
       iconBg: 'bg-emerald-50',
       iconColor: 'text-emerald-600',
     },
     {
-      title: 'Investments',
+      title: t('dashboard.investments'),
       value: investAccounts.length.toString(),
       icon: TrendingUp,
-      change: `${investAccounts.length} active`,
+      change: `${investAccounts.length} ${t('dashboard.active')}`,
       changeColor: 'text-slate-500',
       iconBg: 'bg-purple-50',
       iconColor: 'text-purple-600',
@@ -63,15 +67,15 @@ export default function Dashboard() {
       {/* Header */}
       <header className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-slate-500 mt-1">Welcome back. Here&apos;s your financial overview.</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t('dashboard.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('dashboard.subtitle')}</p>
         </div>
         <Link
           href="/accounts"
           className="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-smooth"
           style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
         >
-          Manage Accounts
+          {t('dashboard.manage_accounts')}
         </Link>
       </header>
 
@@ -99,21 +103,21 @@ export default function Dashboard() {
 
       {/* Market Overview */}
       <div>
-        <h2 className="text-xl font-semibold text-slate-900 mb-4">Market Overview</h2>
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">{t('dashboard.market_overview')}</h2>
         <MarketTicker symbols={['AAPL', 'TSLA', 'MSFT', 'BTC-USD', 'ETH-USD', '0700.HK']} />
       </div>
 
       {/* Accounts Preview */}
       {accounts.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold text-slate-900 mb-4">Your Accounts</h2>
+          <h2 className="text-xl font-semibold text-slate-900 mb-4">{t('dashboard.your_accounts')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {accounts.slice(0, 8).map((acc) => (
               <div key={acc.id} className="card cursor-pointer">
                 <p className="font-medium text-slate-900">{acc.name}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{acc.type} • {acc.currency}</p>
                 <p className="text-lg font-bold mt-3 text-slate-800">
-                  ${acc.balance.toLocaleString()}
+                  {format(acc.balance)}
                 </p>
               </div>
             ))}
@@ -125,14 +129,14 @@ export default function Dashboard() {
       {!loading && accounts.length === 0 && (
         <div className="card text-center py-12">
           <Wallet size={48} className="mx-auto text-slate-300 mb-4" />
-          <h3 className="text-lg font-semibold text-slate-700">No accounts yet</h3>
-          <p className="text-slate-500 mt-1">Start by adding your first account.</p>
+          <h3 className="text-lg font-semibold text-slate-700">{t('dashboard.no_accounts')}</h3>
+          <p className="text-slate-500 mt-1">{t('dashboard.no_accounts_desc')}</p>
           <Link
             href="/accounts"
             className="inline-block mt-4 px-6 py-2 rounded-lg text-white text-sm font-medium cursor-pointer transition-smooth"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
-            Add Account
+            {t('dashboard.add_account')}
           </Link>
         </div>
       )}
@@ -142,6 +146,7 @@ export default function Dashboard() {
 
 function MarketTicker({ symbols }: { symbols: string[] }) {
   const [prices, setPrices] = useState<Record<string, number>>({});
+  const { format } = useCurrency();
 
   useEffect(() => {
     symbols.forEach(symbol => {
@@ -157,7 +162,7 @@ function MarketTicker({ symbols }: { symbols: string[] }) {
         <div key={symbol} className="card p-4 text-center">
           <p className="text-xs font-bold text-slate-500 mb-1">{symbol}</p>
           <p className={`text-lg font-bold ${prices[symbol] ? 'text-slate-900' : 'text-slate-300 animate-pulse'}`}>
-            {prices[symbol] ? `$${prices[symbol].toLocaleString()}` : '---'}
+            {prices[symbol] ? format(prices[symbol]) : '---'}
           </p>
         </div>
       ))}

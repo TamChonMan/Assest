@@ -6,6 +6,8 @@ import {
     PieChart, TrendingUp, TrendingDown, DollarSign,
     BarChart3, ArrowUpRight, ArrowDownRight,
 } from 'lucide-react';
+import { useI18n } from '@/context/I18nContext';
+import { useCurrency } from '@/context/CurrencyContext';
 
 interface Holding {
     asset_id: number;
@@ -30,13 +32,14 @@ export default function AnalyticsPage() {
     const [summary, setSummary] = useState<PortfolioSummary | null>(null);
     const [holdings, setHoldings] = useState<Holding[]>([]);
     const [loading, setLoading] = useState(true);
+    const { t } = useI18n();
+    const { format } = useCurrency();
 
     useEffect(() => {
         api.get('/portfolio/summary')
             .then(async (res) => {
                 const data = res.data as PortfolioSummary;
 
-                // Enrich each holding with current market price
                 const enriched = await Promise.all(
                     data.holdings.map(async (h) => {
                         try {
@@ -75,22 +78,22 @@ export default function AnalyticsPage() {
 
     const stats = [
         {
-            title: 'Total Invested',
-            value: `$${(summary?.total_invested || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+            title: t('analytics.total_invested'),
+            value: format(summary?.total_invested || 0),
             icon: DollarSign,
             iconBg: 'bg-blue-50',
             iconColor: 'text-blue-600',
         },
         {
-            title: 'Market Value',
-            value: `$${totalMarketValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+            title: t('analytics.market_value'),
+            value: format(totalMarketValue),
             icon: BarChart3,
             iconBg: 'bg-purple-50',
             iconColor: 'text-purple-600',
         },
         {
-            title: 'Unrealized P/L',
-            value: `${totalPl >= 0 ? '+' : ''}$${totalPl.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+            title: t('analytics.unrealized_pl'),
+            value: `${totalPl >= 0 ? '+' : ''}${format(Math.abs(totalPl))}`,
             subtitle: `${totalPlPct >= 0 ? '+' : ''}${totalPlPct.toFixed(2)}%`,
             icon: totalPl >= 0 ? TrendingUp : TrendingDown,
             iconBg: totalPl >= 0 ? 'bg-emerald-50' : 'bg-red-50',
@@ -102,7 +105,7 @@ export default function AnalyticsPage() {
     if (loading) {
         return (
             <div className="space-y-6">
-                <h1 className="text-3xl font-bold text-slate-900">Analytics</h1>
+                <h1 className="text-3xl font-bold text-slate-900">{t('analytics.title')}</h1>
                 <div className="grid grid-cols-3 gap-6">
                     {[1, 2, 3].map(i => <div key={i} className="card h-28 animate-pulse" />)}
                 </div>
@@ -117,9 +120,9 @@ export default function AnalyticsPage() {
             <header>
                 <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
                     <PieChart size={28} className="text-purple-600" />
-                    Analytics
+                    {t('analytics.title')}
                 </h1>
-                <p className="text-slate-500 mt-1">Portfolio performance and holdings analysis.</p>
+                <p className="text-slate-500 mt-1">{t('analytics.subtitle')}</p>
             </header>
 
             {/* Summary Cards */}
@@ -151,18 +154,18 @@ export default function AnalyticsPage() {
             {holdings.length > 0 ? (
                 <div className="card overflow-hidden p-0">
                     <div className="px-6 py-4 border-b border-slate-100">
-                        <h2 className="text-lg font-semibold text-slate-900">Holdings ({holdings.length})</h2>
+                        <h2 className="text-lg font-semibold text-slate-900">{t('analytics.holdings')} ({holdings.length})</h2>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
                                 <tr className="text-xs text-slate-500 uppercase tracking-wider border-b border-slate-100">
-                                    <th className="text-left px-6 py-3 font-medium">Asset</th>
-                                    <th className="text-right px-6 py-3 font-medium">Qty</th>
-                                    <th className="text-right px-6 py-3 font-medium">Avg Cost</th>
-                                    <th className="text-right px-6 py-3 font-medium">Current</th>
-                                    <th className="text-right px-6 py-3 font-medium">Market Value</th>
-                                    <th className="text-right px-6 py-3 font-medium">P/L</th>
+                                    <th className="text-left px-6 py-3 font-medium">{t('analytics.asset')}</th>
+                                    <th className="text-right px-6 py-3 font-medium">{t('analytics.qty')}</th>
+                                    <th className="text-right px-6 py-3 font-medium">{t('analytics.avg_cost')}</th>
+                                    <th className="text-right px-6 py-3 font-medium">{t('analytics.current')}</th>
+                                    <th className="text-right px-6 py-3 font-medium">{t('analytics.market_value')}</th>
+                                    <th className="text-right px-6 py-3 font-medium">{t('analytics.pl')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -178,13 +181,13 @@ export default function AnalyticsPage() {
                                                 {h.quantity}
                                             </td>
                                             <td className="text-right px-6 py-4 text-slate-600">
-                                                ${h.avg_cost.toFixed(2)}
+                                                {format(h.avg_cost)}
                                             </td>
                                             <td className="text-right px-6 py-4 font-medium text-slate-900">
-                                                {h.current_price ? `$${h.current_price.toFixed(2)}` : '---'}
+                                                {h.current_price ? format(h.current_price) : '---'}
                                             </td>
                                             <td className="text-right px-6 py-4 font-medium text-slate-900">
-                                                {h.market_value ? `$${h.market_value.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '---'}
+                                                {h.market_value ? format(h.market_value) : '---'}
                                             </td>
                                             <td className="text-right px-6 py-4">
                                                 {h.unrealized_pl !== undefined ? (
@@ -196,7 +199,7 @@ export default function AnalyticsPage() {
                                                         )}
                                                         <div>
                                                             <p className={`font-bold ${isProfit ? 'text-emerald-600' : 'text-red-500'}`}>
-                                                                {isProfit ? '+' : ''}${h.unrealized_pl.toFixed(2)}
+                                                                {isProfit ? '+' : '-'}{format(Math.abs(h.unrealized_pl))}
                                                             </p>
                                                             <p className={`text-xs ${isProfit ? 'text-emerald-500' : 'text-red-400'}`}>
                                                                 {isProfit ? '+' : ''}{h.unrealized_pl_pct?.toFixed(2)}%
@@ -217,8 +220,8 @@ export default function AnalyticsPage() {
             ) : (
                 <div className="card text-center py-12">
                     <PieChart size={48} className="mx-auto text-slate-300 mb-4" />
-                    <h3 className="text-lg font-semibold text-slate-700">No holdings yet</h3>
-                    <p className="text-slate-500 mt-1">Record BUY transactions to see your portfolio here.</p>
+                    <h3 className="text-lg font-semibold text-slate-700">{t('analytics.no_holdings')}</h3>
+                    <p className="text-slate-500 mt-1">{t('analytics.no_holdings_desc')}</p>
                 </div>
             )}
         </div>
