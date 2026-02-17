@@ -12,29 +12,34 @@ export default function Sidebar() {
     const { currency, setCurrency, currencies } = useCurrency();
 
     const navItems = [
-        { href: '/', labelKey: 'nav.dashboard', icon: Home, color: 'text-blue-400' },
-        { href: '/accounts', labelKey: 'nav.accounts', icon: Wallet, color: 'text-emerald-400' },
-        { href: '/transactions', labelKey: 'nav.transactions', icon: Activity, color: 'text-purple-400' },
-        { href: '/analytics', labelKey: 'nav.analytics', icon: PieChart, color: 'text-amber-400' },
+        { href: '/', labelKey: 'nav.dashboard', icon: Home },
+        { href: '/accounts', labelKey: 'nav.accounts', icon: Wallet },
+        { href: '/transactions', labelKey: 'nav.transactions', icon: Activity },
+        { href: '/analytics', labelKey: 'nav.analytics', icon: PieChart },
     ];
 
     return (
-        <aside
-            className="h-screen w-64 fixed left-0 top-0 z-50 flex flex-col"
-            style={{ backgroundColor: 'var(--color-sidebar-bg)' }}
-        >
+        <aside className="h-screen w-64 fixed left-0 top-0 z-50 flex flex-col bg-[#18181b] border-r border-zinc-800/50">
             {/* Logo */}
-            <div className="p-6 border-b border-white/10">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    {t('app.title')}
-                </h1>
-                <p className="text-xs mt-1" style={{ color: 'var(--color-sidebar-text)' }}>
+            <div className="p-6 pb-5">
+                <div className="flex items-center gap-2.5 mb-1">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
+                        <span className="text-white font-black text-sm">A</span>
+                    </div>
+                    <h1 className="text-lg font-bold text-white tracking-tight">
+                        {t('app.title')}
+                    </h1>
+                </div>
+                <p className="text-[11px] text-zinc-500 ml-[42px] -mt-0.5">
                     {t('app.subtitle')}
                 </p>
             </div>
 
+            {/* Divider */}
+            <div className="mx-4 h-px bg-gradient-to-r from-transparent via-zinc-700/50 to-transparent" />
+
             {/* Navigation */}
-            <nav className="flex-1 px-3 py-6 space-y-1">
+            <nav className="flex-1 px-3 py-4 space-y-0.5">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href;
                     const Icon = item.icon;
@@ -42,45 +47,42 @@ export default function Sidebar() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-smooth group
-                ${isActive
-                                    ? 'bg-white/10 text-white'
-                                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                            className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-smooth group relative
+                                ${isActive
+                                    ? 'bg-white/[0.08] text-white'
+                                    : 'text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300'
                                 }`}
                         >
-                            <Icon
-                                size={20}
-                                className={`transition-smooth ${isActive ? item.color : 'group-hover:' + item.color}`}
-                            />
-                            <span className="font-medium text-sm">{t(item.labelKey)}</span>
                             {isActive && (
-                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-400" />
+                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 rounded-r-full bg-gradient-to-b from-indigo-400 to-violet-400" />
                             )}
+                            <Icon size={18} className={`transition-smooth ${isActive ? 'text-indigo-400' : 'group-hover:text-zinc-400'}`} />
+                            <span className="font-medium text-[13px]">{t(item.labelKey)}</span>
                         </Link>
                     );
                 })}
             </nav>
 
-            {/* Language & Currency Selectors */}
-            <div className="px-3 pb-2 space-y-2">
-                {/* Language Toggle */}
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5">
-                    <Globe size={16} className="text-slate-400" />
-                    <div className="flex flex-1 rounded-md overflow-hidden border border-white/10">
+            {/* Controls */}
+            <div className="px-3 pb-2 space-y-1.5">
+                {/* Language */}
+                <div className="flex items-center gap-2 px-2 py-1.5">
+                    <Globe size={14} className="text-zinc-600" />
+                    <div className="flex flex-1 rounded-md overflow-hidden border border-zinc-800 bg-zinc-900/50">
                         <button
                             onClick={() => setLocale('en')}
-                            className={`flex-1 text-xs py-1.5 font-medium transition-smooth cursor-pointer ${locale === 'en'
-                                    ? 'bg-blue-500/30 text-blue-300'
-                                    : 'text-slate-400 hover:text-white'
+                            className={`flex-1 text-[11px] py-1 font-medium transition-smooth cursor-pointer ${locale === 'en'
+                                    ? 'bg-indigo-500/20 text-indigo-400'
+                                    : 'text-zinc-600 hover:text-zinc-400'
                                 }`}
                         >
                             EN
                         </button>
                         <button
                             onClick={() => setLocale('zh')}
-                            className={`flex-1 text-xs py-1.5 font-medium transition-smooth cursor-pointer ${locale === 'zh'
-                                    ? 'bg-blue-500/30 text-blue-300'
-                                    : 'text-slate-400 hover:text-white'
+                            className={`flex-1 text-[11px] py-1 font-medium transition-smooth cursor-pointer ${locale === 'zh'
+                                    ? 'bg-indigo-500/20 text-indigo-400'
+                                    : 'text-zinc-600 hover:text-zinc-400'
                                 }`}
                         >
                             中文
@@ -88,30 +90,33 @@ export default function Sidebar() {
                     </div>
                 </div>
 
-                {/* Currency Selector */}
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5">
-                    <ChevronDown size={16} className="text-slate-400" />
+                {/* Currency */}
+                <div className="flex items-center gap-2 px-2 py-1.5">
+                    <ChevronDown size={14} className="text-zinc-600" />
                     <select
                         value={currency}
                         onChange={(e) => setCurrency(e.target.value as Currency)}
-                        className="flex-1 bg-transparent border border-white/10 rounded-md text-xs text-slate-300 py-1.5 px-2 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-400 appearance-none"
+                        className="flex-1 bg-zinc-900/50 border border-zinc-800 rounded-md text-[11px] text-zinc-400 py-1 px-2 cursor-pointer focus:outline-none focus:border-indigo-500/50 appearance-none"
                     >
                         {currencies.map((c) => (
-                            <option key={c} value={c} className="bg-slate-800 text-white">{c}</option>
+                            <option key={c} value={c} className="bg-zinc-900 text-zinc-300">{c}</option>
                         ))}
                     </select>
-                    <span className="text-xs text-slate-500">{t('currency.settlement')}</span>
+                    <span className="text-[10px] text-zinc-600">{t('currency.settlement')}</span>
                 </div>
             </div>
 
-            {/* Footer */}
-            <div className="p-3 border-t border-white/10">
+            {/* Divider */}
+            <div className="mx-4 h-px bg-gradient-to-r from-transparent via-zinc-700/50 to-transparent" />
+
+            {/* Settings */}
+            <div className="p-3">
                 <Link
                     href="/settings"
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-smooth text-slate-400 hover:bg-white/5 hover:text-white group"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-smooth text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300 group"
                 >
-                    <Settings size={20} className="group-hover:rotate-90 transition-smooth" />
-                    <span className="font-medium text-sm">{t('nav.settings')}</span>
+                    <Settings size={18} className="group-hover:rotate-90 transition-all duration-500" />
+                    <span className="font-medium text-[13px]">{t('nav.settings')}</span>
                 </Link>
             </div>
         </aside>
