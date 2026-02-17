@@ -97,6 +97,12 @@ export default function Dashboard() {
         })}
       </div>
 
+      {/* Market Overview */}
+      <div>
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">Market Overview</h2>
+        <MarketTicker symbols={['AAPL', 'TSLA', 'MSFT', 'BTC-USD', 'ETH-USD', '0700.HK']} />
+      </div>
+
       {/* Accounts Preview */}
       {accounts.length > 0 && (
         <div>
@@ -130,6 +136,31 @@ export default function Dashboard() {
           </Link>
         </div>
       )}
+    </div>
+  );
+}
+
+function MarketTicker({ symbols }: { symbols: string[] }) {
+  const [prices, setPrices] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    symbols.forEach(symbol => {
+      api.get(`/market/price/${symbol}`).then(res => {
+        setPrices(prev => ({ ...prev, [symbol]: res.data.price }));
+      });
+    });
+  }, [symbols]);
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      {symbols.map(symbol => (
+        <div key={symbol} className="card p-4 text-center">
+          <p className="text-xs font-bold text-slate-500 mb-1">{symbol}</p>
+          <p className={`text-lg font-bold ${prices[symbol] ? 'text-slate-900' : 'text-slate-300 animate-pulse'}`}>
+            {prices[symbol] ? `$${prices[symbol].toLocaleString()}` : '---'}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
