@@ -19,7 +19,7 @@ export default function Dashboard() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const { t } = useI18n();
-  const { format } = useCurrency();
+  const { format, convertFrom, formatFrom, symbol: currSymbol } = useCurrency();
 
   useEffect(() => {
     api.get('/accounts/')
@@ -28,14 +28,14 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  const totalBalance = accounts.reduce((acc, curr) => acc + (curr.balance || 0), 0);
+  const totalBalance = accounts.reduce((acc, curr) => acc + convertFrom(curr.balance || 0, curr.currency), 0);
   const bankAccounts = accounts.filter(a => a.type === 'BANK');
   const investAccounts = accounts.filter(a => a.type === 'STOCK' || a.type === 'CRYPTO');
 
   const stats = [
     {
       title: t('dashboard.net_worth'),
-      value: format(totalBalance),
+      value: `${currSymbol}${totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       icon: DollarSign,
       change: '+2.5%',
       changePositive: true,
@@ -136,7 +136,7 @@ export default function Dashboard() {
                     <p className="text-[11px] text-zinc-400">{acc.type} • {acc.currency}</p>
                   </div>
                 </div>
-                <p className="text-xl font-extrabold text-zinc-900 tracking-tight">{format(acc.balance)}</p>
+                <p className="text-xl font-extrabold text-zinc-900 tracking-tight">{formatFrom(acc.balance, acc.currency)}</p>
               </div>
             ))}
           </div>

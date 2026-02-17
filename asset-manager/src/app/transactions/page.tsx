@@ -23,7 +23,7 @@ export default function TransactionsPage() {
     const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const { t } = useI18n();
-    const { format } = useCurrency();
+    const { format, formatFrom } = useCurrency();
 
     const [txType, setTxType] = useState('DEPOSIT');
     const [accountId, setAccountId] = useState<number | ''>('');
@@ -35,6 +35,7 @@ export default function TransactionsPage() {
     const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState('');
+    const [txDate, setTxDate] = useState(() => new Date().toISOString().split('T')[0]);
 
     const txTypes = [
         { value: 'DEPOSIT', label: t('tx.deposit'), icon: ArrowDownLeft, gradient: 'from-emerald-500 to-teal-500', soft: 'bg-emerald-50', color: 'text-emerald-600' },
@@ -65,13 +66,14 @@ export default function TransactionsPage() {
         try {
             const payload: Record<string, unknown> = {
                 type: txType, account_id: accountId, total: parseFloat(total),
-                date: new Date().toISOString(), notes: notes || null,
+                date: new Date(txDate + 'T00:00:00').toISOString(), notes: notes || null,
             };
             if (isTradeType) { payload.quantity = parseFloat(quantity); payload.price = parseFloat(price); }
             await api.post('/transactions/', payload);
             const txLabel = txTypes.find(tx => tx.value === txType)?.label || txType;
             setSuccess(`${txLabel} $${total} ${t('tx.success')}`);
             setTotal(''); setSymbol(''); setQuantity(''); setPrice(''); setNotes('');
+            setTxDate(new Date().toISOString().split('T')[0]);
             fetchData();
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) { setError(err.response?.data?.detail || t('tx.insufficient')); }
@@ -105,8 +107,8 @@ export default function TransactionsPage() {
                                 type="button"
                                 onClick={() => { setTxType(txItem.value); setError(''); setSuccess(''); }}
                                 className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm cursor-pointer transition-smooth border ${isActive
-                                        ? `${txItem.soft} ${txItem.color} border-current shadow-sm`
-                                        : 'bg-white text-zinc-400 border-zinc-200 hover:border-zinc-300 hover:text-zinc-500'
+                                    ? `${txItem.soft} ${txItem.color} border-current shadow-sm`
+                                    : 'bg-white text-zinc-400 border-zinc-200 hover:border-zinc-300 hover:text-zinc-500'
                                     }`}
                             >
                                 <Icon size={16} />
@@ -117,12 +119,18 @@ export default function TransactionsPage() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-semibold text-zinc-700 mb-1.5">{t('tx.account')}</label>
-                        <select value={accountId} onChange={(e) => setAccountId(Number(e.target.value))} required className="w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none cursor-pointer">
-                            <option value="">{t('tx.select_account')}</option>
-                            {accounts.map(a => (<option key={a.id} value={a.id}>{a.name} ({a.currency}) — {format(a.balance)}</option>))}
-                        </select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-semibold text-zinc-700 mb-1.5"><Calendar size={13} className="inline mr-1" />{t('tx.date')}</label>
+                            <input type="date" value={txDate} onChange={(e) => setTxDate(e.target.value)} required className="w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">{t('tx.account')}</label>
+                            <select value={accountId} onChange={(e) => setAccountId(Number(e.target.value))} required className="w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none cursor-pointer">
+                                <option value="">{t('tx.select_account')}</option>
+                                {accounts.map(a => (<option key={a.id} value={a.id}>{a.name} ({a.currency}) — {formatFrom(a.balance, a.currency)}</option>))}
+                            </select>
+                        </div>
                     </div>
 
                     {isTradeType && (
@@ -165,7 +173,7 @@ export default function TransactionsPage() {
                         </div>
                     )}
 
-                    <button type="submit" disabled={submitting} className="w-full btn-primary disabled:opacity-50">
+                    <button type="submit" disabled={submitting} className="w-full btn-primary disabled:opacity-50 py-3 rounded-xl text-white font-semibold">
                         {submitting ? t('tx.recording') : `${t('tx.record')} ${txTypes.find(tx => tx.value === txType)?.label}`}
                     </button>
                 </form>

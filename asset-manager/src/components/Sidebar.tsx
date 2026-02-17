@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Wallet, Activity, PieChart, Settings, Globe, ChevronDown } from 'lucide-react';
+import { Home, Wallet, Activity, PieChart, Briefcase, Settings, Globe, ChevronDown } from 'lucide-react';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency, Currency } from '@/context/CurrencyContext';
 
@@ -15,6 +15,7 @@ export default function Sidebar() {
         { href: '/', labelKey: 'nav.dashboard', icon: Home },
         { href: '/accounts', labelKey: 'nav.accounts', icon: Wallet },
         { href: '/transactions', labelKey: 'nav.transactions', icon: Activity },
+        { href: '/holdings', labelKey: 'nav.holdings', icon: Briefcase },
         { href: '/analytics', labelKey: 'nav.analytics', icon: PieChart },
     ];
 
@@ -72,8 +73,8 @@ export default function Sidebar() {
                         <button
                             onClick={() => setLocale('en')}
                             className={`flex-1 text-[11px] py-1 font-medium transition-smooth cursor-pointer ${locale === 'en'
-                                    ? 'bg-indigo-500/20 text-indigo-400'
-                                    : 'text-zinc-600 hover:text-zinc-400'
+                                ? 'bg-indigo-500/20 text-indigo-400'
+                                : 'text-zinc-600 hover:text-zinc-400'
                                 }`}
                         >
                             EN
@@ -81,8 +82,8 @@ export default function Sidebar() {
                         <button
                             onClick={() => setLocale('zh')}
                             className={`flex-1 text-[11px] py-1 font-medium transition-smooth cursor-pointer ${locale === 'zh'
-                                    ? 'bg-indigo-500/20 text-indigo-400'
-                                    : 'text-zinc-600 hover:text-zinc-400'
+                                ? 'bg-indigo-500/20 text-indigo-400'
+                                : 'text-zinc-600 hover:text-zinc-400'
                                 }`}
                         >
                             中文
