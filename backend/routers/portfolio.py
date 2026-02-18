@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from database import get_session
-from services.portfolio import calculate_holdings, calculate_summary, record_daily_snapshot
+from services.portfolio import calculate_holdings, calculate_summary, record_daily_snapshot, backfill_history
 from models import PortfolioSnapshot
 
 router = APIRouter(
@@ -33,3 +33,10 @@ def get_summary(session: Session = Depends(get_session)):
 def get_history(session: Session = Depends(get_session)):
     """Get historical portfolio snapshots for trend chart."""
     return session.exec(select(PortfolioSnapshot).order_by(PortfolioSnapshot.date)).all()
+
+
+@router.post("/history/backfill")
+def trigger_backfill(session: Session = Depends(get_session)):
+    """Trigger backfill of historical portfolio snapshots."""
+    backfill_history(session)
+    return {"status": "ok", "message": "History backfill started"}

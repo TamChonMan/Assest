@@ -43,7 +43,7 @@ export default function HoldingsPage() {
     const [loading, setLoading] = useState(true);
     const [totalInvested, setTotalInvested] = useState(0);
     const { t } = useI18n();
-    const { format, convertFrom, formatNative } = useCurrency();
+    const { format, convertFrom, formatNative, currency } = useCurrency();
 
     useEffect(() => {
         api.get('/portfolio/summary')
@@ -83,7 +83,7 @@ export default function HoldingsPage() {
             .finally(() => setLoading(false));
     }, []);
 
-    // Global totals (settlement currency)
+    // Global totals (in Selected Currency)
     const totalMarketValue = holdings.reduce((sum, h) => sum + convertFrom(h.market_value || 0, h.currency || 'USD'), 0);
     const totalPl = holdings.reduce((sum, h) => sum + convertFrom(h.unrealized_pl || 0, h.currency || 'USD'), 0);
     const totalInvestedConverted = holdings.reduce((sum, h) => sum + convertFrom(h.total_invested || 0, h.currency || 'USD'), 0);
@@ -117,21 +117,21 @@ export default function HoldingsPage() {
     const summaryCards = [
         {
             title: t('holdings.total_invested'),
-            value: format(totalInvested),
+            value: formatNative(totalInvestedConverted, currency),
             icon: DollarSign,
             soft: 'bg-indigo-50',
             iconColor: 'text-indigo-500',
         },
         {
             title: t('holdings.total_market_value'),
-            value: format(totalMarketValue),
+            value: formatNative(totalMarketValue, currency),
             icon: BarChart3,
             soft: 'bg-violet-50',
             iconColor: 'text-violet-500',
         },
         {
             title: t('holdings.total_pl'),
-            value: `${totalPl >= 0 ? '+' : ''}${format(Math.abs(totalPl))}`,
+            value: `${totalPl >= 0 ? '+' : ''}${formatNative(Math.abs(totalPl), currency)}`,
             subtitle: `${totalPlPct >= 0 ? '+' : ''}${totalPlPct.toFixed(2)}%`,
             icon: totalPl >= 0 ? TrendingUp : TrendingDown,
             soft: totalPl >= 0 ? 'bg-emerald-50' : 'bg-red-50',
@@ -211,9 +211,9 @@ export default function HoldingsPage() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4 text-sm">
-                                        <span className="text-zinc-500">{t('holdings.total_market_value')}: <strong className="text-zinc-900">{format(groupMV)}</strong></span>
+                                        <span className="text-zinc-500">{t('holdings.total_market_value')}: <strong className="text-zinc-900">{formatNative(groupMV, currency)}</strong></span>
                                         <span className={groupPl >= 0 ? 'text-emerald-600 font-bold' : 'text-red-500 font-bold'}>
-                                            {groupPl >= 0 ? '+' : ''}{format(Math.abs(groupPl))} ({groupPlPct >= 0 ? '+' : ''}{groupPlPct.toFixed(2)}%)
+                                            {groupPl >= 0 ? '+' : ''}{formatNative(Math.abs(groupPl), currency)} ({groupPlPct >= 0 ? '+' : ''}{groupPlPct.toFixed(2)}%)
                                         </span>
                                     </div>
                                 </div>
@@ -314,10 +314,10 @@ export default function HoldingsPage() {
                                         {group.holdings.length} {group.holdings.length === 1 ? 'holding' : 'holdings'}
                                     </span>
                                     <div className="flex items-center gap-6">
-                                        <span className="text-zinc-500">{t('holdings.total_invested')}: <strong className="text-zinc-900">{format(groupInvested)}</strong></span>
-                                        <span className="text-zinc-500">{t('holdings.total_market_value')}: <strong className="text-zinc-900">{format(groupMV)}</strong></span>
+                                        <span className="text-zinc-500">{t('holdings.total_invested')}: <strong className="text-zinc-900">{formatNative(groupInvested, currency)}</strong></span>
+                                        <span className="text-zinc-500">{t('holdings.total_market_value')}: <strong className="text-zinc-900">{formatNative(groupMV, currency)}</strong></span>
                                         <span className={groupPl >= 0 ? 'text-emerald-600 font-bold' : 'text-red-500 font-bold'}>
-                                            {groupPl >= 0 ? '+' : ''}{format(Math.abs(groupPl))} ({groupPlPct >= 0 ? '+' : ''}{groupPlPct.toFixed(2)}%)
+                                            {groupPl >= 0 ? '+' : ''}{formatNative(Math.abs(groupPl), currency)} ({groupPlPct >= 0 ? '+' : ''}{groupPlPct.toFixed(2)}%)
                                         </span>
                                     </div>
                                 </div>

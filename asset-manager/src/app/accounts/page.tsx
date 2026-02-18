@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { Plus, Building2, TrendingUp, Bitcoin, Wallet, X } from 'lucide-react';
+import { Plus, Building2, TrendingUp, Bitcoin, Wallet, X, Calendar } from 'lucide-react';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency } from '@/context/CurrencyContext';
 
@@ -12,6 +12,7 @@ interface Account {
     type: 'BANK' | 'STOCK' | 'CRYPTO';
     currency: string;
     balance: number;
+    inception_date?: string;
 }
 
 const typeConfig = {
@@ -24,9 +25,15 @@ export default function AccountsPage() {
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [newAccount, setNewAccount] = useState({ name: '', type: 'BANK', currency: 'HKD', balance: 0 });
+    const [newAccount, setNewAccount] = useState({
+        name: '',
+        type: 'BANK',
+        currency: 'HKD',
+        balance: 0,
+        inception_date: '',
+    });
     const { t } = useI18n();
-    const { format } = useCurrency();
+    const { formatNative } = useCurrency(); // Use formatNative instead of format
 
     useEffect(() => { fetchAccounts(); }, []);
 
@@ -42,8 +49,18 @@ export default function AccountsPage() {
     const createAccount = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await api.post('/accounts/', newAccount);
-            setNewAccount({ name: '', type: 'BANK', currency: 'HKD', balance: 0 });
+            const payload: any = {
+                name: newAccount.name,
+                type: newAccount.type,
+                currency: newAccount.currency,
+                balance: newAccount.balance,
+            };
+            // Only include inception_date if user specified one
+            if (newAccount.inception_date) {
+                payload.inception_date = newAccount.inception_date + 'T00:00:00';
+            }
+            await api.post('/accounts/', payload);
+            setNewAccount({ name: '', type: 'BANK', currency: 'HKD', balance: 0, inception_date: '' });
             setShowModal(false);
             fetchAccounts();
         } catch (error) { console.error('Failed to create account', error); }
@@ -94,7 +111,15 @@ export default function AccountsPage() {
                                         <p className="text-[11px] text-zinc-400 font-medium">{acc.type} • {acc.currency}</p>
                                     </div>
                                 </div>
-                                <p className="text-2xl font-extrabold text-zinc-900 tracking-tight">{format(acc.balance)}</p>
+                                <p className="text-2xl font-extrabold text-zinc-900 tracking-tight">
+                                    {formatNative(acc.balance, acc.currency)}
+                                </p>
+                                {acc.inception_date && (
+                                    <p className="text-[11px] text-zinc-400 mt-1 flex items-center gap-1">
+                                        <Calendar size={10} />
+                                        Since {new Date(acc.inception_date).toLocaleDateString()}
+                                    </p>
+                                )}
                             </div>
                         );
                     })}
@@ -153,6 +178,22 @@ export default function AccountsPage() {
                             <div>
                                 <label className="block text-sm font-semibold text-zinc-700 mb-1.5">{t('accounts.balance')}</label>
                                 <input type="number" step="any" className="w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none" value={newAccount.balance} onChange={e => setNewAccount({ ...newAccount, balance: parseFloat(e.target.value) || 0 })} />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
+                                    <span className="flex items-center gap-1">
+                                        <Calendar size={14} className="text-zinc-400" />
+                                        Inception Date
+                                    </span>
+                                </label>
+                                <input
+                                    type="date"
+                                    className="w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none"
+                                    value={newAccount.inception_date}
+                                    onChange={e => setNewAccount({ ...newAccount, inception_date: e.target.value })}
+                                    placeholder="Leave empty for today"
+                                />
+                                <p className="text-[11px] text-zinc-400 mt-1">Leave empty to default to today</p>
                             </div>
                             <div className="flex gap-3 pt-2">
                                 <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-2.5 rounded-lg text-zinc-600 font-medium hover:bg-zinc-100 transition-smooth cursor-pointer">

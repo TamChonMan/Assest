@@ -8,7 +8,7 @@ interface NetWorthChartProps {
 }
 
 export default function NetWorthChart({ data }: NetWorthChartProps) {
-    const { format } = useCurrency();
+    const { formatNative, currency } = useCurrency();
 
     if (data.length === 0) {
         return (
@@ -47,7 +47,7 @@ export default function NetWorthChart({ data }: NetWorthChartProps) {
                         tickFormatter={(val) => val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}
                     />
                     <Tooltip
-                        formatter={(value: any) => [format(Number(value)), 'Net Worth']}
+                        formatter={(value: any) => [formatNative(Number(value), currency), 'Net Worth']}
                         contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '12px', color: '#fff' }}
                         itemStyle={{ color: '#e4e4e7' }}
                         labelStyle={{ color: '#a1a1aa', marginBottom: '4px' }}

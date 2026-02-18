@@ -1,23 +1,34 @@
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlmodel import Session, select
+from sqlmodel import Session, SQLModel, create_engine, select
+from sqlmodel.pool import StaticPool
 from main import app
 from models import Account, Transaction, TransactionType, Asset
 from database import get_session
 
-client = TestClient(app)
 
 @pytest.fixture(name="session")
 def session_fixture():
-    from database import engine
-    from sqlmodel import SQLModel
+    engine = create_engine(
+        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+    )
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
         yield session
-    SQLModel.metadata.drop_all(engine)
 
-def test_edit_transaction_amount(session: Session):
+
+@pytest.fixture(name="client")
+def client_fixture(session: Session):
+    def get_session_override():
+        return session
+    app.dependency_overrides[get_session] = get_session_override
+    client = TestClient(app)
+    yield client
+    app.dependency_overrides.clear()
+
+
+def test_edit_transaction_amount(session: Session, client):
     # 1. Setup Account
     account = Account(name="Test Acc", type="BANK", currency="USD", balance=1000.0)
     session.add(account)
@@ -40,15 +51,13 @@ def test_edit_transaction_amount(session: Session):
     # 3. Edit Transaction (Change to 800) -> Balance should be 1000 + 800 = 1800
     res = client.put(f"/transactions/{tx_id}", json={
         "total": 800.0,
-        # other fields optional if we support partial, but for now let's send full or partial
-        # Use partial update model
     })
     assert res.status_code == 200
     
     session.refresh(account)
     assert account.balance == 1800.0
 
-def test_edit_transaction_type(session: Session):
+def test_edit_transaction_type(session: Session, client):
     # Deposit 500 -> Balance 500 (Initial 0)
     account = Account(name="Test Acc", type="BANK", currency="USD", balance=0.0)
     session.add(account)
@@ -75,7 +84,7 @@ def test_edit_transaction_type(session: Session):
     session.refresh(account)
     assert account.balance == -200.0
 
-def test_edit_transaction_date(session: Session):
+def test_edit_transaction_date(session: Session, client):
     # Simply check if date is updated
     account = Account(name="Test Acc", type="BANK", currency="USD", balance=0.0)
     session.add(account)
@@ -96,4 +105,3 @@ def test_edit_transaction_date(session: Session):
     assert res.status_code == 200
     data = res.json()
     assert data["date"].startswith("2022-01-01")
-

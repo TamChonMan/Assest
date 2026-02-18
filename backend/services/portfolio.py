@@ -1,11 +1,11 @@
 """
 Portfolio Service: Calculates holdings, average cost, and P/L from transaction history.
 """
-from datetime import datetime, date
-from typing import Optional
+from datetime import datetime, date, timedelta
+from typing import Optional, List, Dict
 from sqlmodel import Session, select
 from models import Transaction, TransactionType, Asset, Account, PortfolioSnapshot, PriceHistory
-from services.market_data import get_asset_price
+from services.market_data import get_asset_price, get_price_history_batch
 
 # Shared Exchange Rates (Should be in config/shared module ideally)
 # For MVP, duplicating or importing. Let's define here for service.
@@ -20,21 +20,27 @@ def _convert_to_usd(amount: float, currency: str) -> float:
     return amount / EXCHANGE_RATES.get(currency, 1.0)
 
 
-def calculate_holdings(session: Session) -> list[dict]:
+def calculate_holdings(session: Session, at_date: Optional[date] = None) -> list[dict]:
     """
     Calculate current holdings from all BUY/SELL transactions.
     Returns a list of holdings with symbol, quantity, avg_cost, total_invested.
-    Holdings are grouped by (account_id, asset_id) so the same stock
-    bought from different accounts appears as separate entries.
+    Holdings are grouped by (account_id, asset_id).
     Uses weighted average cost method.
+    If at_date is provided, only considers transactions on or before that date.
     """
     # Get all BUY/SELL transactions with assets
     statement = (
         select(Transaction)
         .where(Transaction.type.in_([TransactionType.BUY, TransactionType.SELL]))
         .where(Transaction.asset_id.is_not(None))
-        .order_by(Transaction.date)
     )
+    
+    if at_date:
+        # Filter by date (end of day)
+        end_of_day = datetime(at_date.year, at_date.month, at_date.day, 23, 59, 59)
+        statement = statement.where(Transaction.date <= end_of_day)
+
+    statement = statement.order_by(Transaction.date)
     transactions = session.exec(statement).all()
 
     # Aggregate by (account_id, asset_id)
@@ -59,6 +65,7 @@ def calculate_holdings(session: Session) -> list[dict]:
 
     # Build result with asset info & current price
     result = []
+    
     for (account_id, asset_id), h in holdings.items():
         if h["quantity"] <= 0.0001: # Filter near-zero
             continue
@@ -70,16 +77,28 @@ def calculate_holdings(session: Session) -> list[dict]:
         avg_cost = h["total_cost"] / h["quantity"]
         asset_currency = getattr(asset, 'currency', 'USD') or 'USD'
         
-        # Get latest price from DB (PriceHistory), then live, then avg_cost fallback
-        latest_price_row = session.exec(
-            select(PriceHistory).where(PriceHistory.asset_id == asset_id).order_by(PriceHistory.date.desc())
-        ).first()
-        if latest_price_row:
-            current_price = latest_price_row.price
+        # Get price appropriate for the date
+        if at_date:
+            # Find last price on or before at_date
+            price_stmt = (
+                select(PriceHistory)
+                .where(PriceHistory.asset_id == asset_id)
+                .where(PriceHistory.date <= datetime(at_date.year, at_date.month, at_date.day, 23, 59, 59))
+                .order_by(PriceHistory.date.desc())
+            )
+            hist_price = session.exec(price_stmt).first()
+            current_price = hist_price.price if hist_price else avg_cost # Fallback to cost if no history
         else:
-            # Fetch live price from Yahoo Finance
-            live_price = get_asset_price(asset.symbol)
-            current_price = live_price if live_price > 0 else avg_cost
+            # Get latest price from DB (PriceHistory), then live, then avg_cost fallback
+            latest_price_row = session.exec(
+                select(PriceHistory).where(PriceHistory.asset_id == asset_id).order_by(PriceHistory.date.desc())
+            ).first()
+            if latest_price_row:
+                current_price = latest_price_row.price
+            else:
+                # Fetch live price from Yahoo Finance
+                live_price = get_asset_price(asset.symbol)
+                current_price = live_price if live_price > 0 else avg_cost
 
         market_value = h["quantity"] * current_price  # In asset's native currency
         market_value_usd = _convert_to_usd(market_value, asset_currency)
@@ -129,17 +148,203 @@ def calculate_summary(session: Session) -> dict:
         "holdings": holdings,
     }
 
+def calculate_cash_balances_at_date(session: Session, at_date: date) -> float:
+    """
+    Reconstruct total cash balance (in USD) for all accounts at a specific past date.
+    Logic: Start with 0, replay all cash-affecting transactions up to at_date.
+    Types: DEPOSIT(+), WITHDRAW(-), BUY(-), SELL(+)
+    Note: Transaction.total is stored in Account Currency.
+    """
+    end_of_day = datetime(at_date.year, at_date.month, at_date.day, 23, 59, 59)
+    
+    # Fetch all transactions up to date
+    statement = (
+        select(Transaction)
+        .where(Transaction.date <= end_of_day)
+        .order_by(Transaction.date)
+    )
+    transactions = session.exec(statement).all()
+    
+    # Map account_id -> current balance (reconstructed)
+    account_balances = {} 
+
+    for tx in transactions:
+        aid = tx.account_id
+        if aid not in account_balances:
+            account_balances[aid] = 0.0
+            
+        amount = tx.total # In account currency
+        
+        if tx.type == TransactionType.DEPOSIT:
+            account_balances[aid] += amount
+        elif tx.type == TransactionType.WITHDRAW:
+            account_balances[aid] -= amount
+        elif tx.type == TransactionType.BUY:
+            account_balances[aid] -= amount
+        elif tx.type == TransactionType.SELL:
+            account_balances[aid] += amount
+    
+    # Convert all to USD
+    total_cash_usd = 0.0
+    for aid, bal in account_balances.items():
+        account = session.get(Account, aid)
+        if account:
+            total_cash_usd += _convert_to_usd(bal, account.currency)
+            
+    return total_cash_usd
+
+
+def calculate_portfolio_value_at_date(session: Session, at_date: date) -> dict:
+    """Calculate Total Equity at a specific date."""
+    # 1. Holdings Value
+    holdings = calculate_holdings(session, at_date=at_date)
+    total_market_value_usd = sum(h["market_value_usd"] for h in holdings)
+    total_invested_usd = sum(
+        _convert_to_usd(h["total_invested"], h.get("currency", "USD"))
+        for h in holdings
+    )
+
+    # 2. Cash Value (Reconstructed)
+    total_cash_usd = calculate_cash_balances_at_date(session, at_date)
+
+    return {
+        "date": at_date,
+        "total_equity": total_market_value_usd + total_cash_usd,
+        "total_cash": total_cash_usd,
+        "total_invested": total_invested_usd
+    }
+
+
+def _update_price_history(session: Session, price_data: Dict[date, Dict[str, float]], assets: List[Asset]):
+    """Helper to update PriceHistory table with batch data."""
+    asset_map = {a.symbol: a.id for a in assets}
+    
+    for day, prices in price_data.items():
+        day_datetime = datetime(day.year, day.month, day.day)
+        
+        for symbol, price in prices.items():
+            if symbol not in asset_map:
+                continue
+                
+            asset_id = asset_map[symbol]
+            
+            # Check if exists
+            existing = session.exec(
+                select(PriceHistory)
+                .where(PriceHistory.asset_id == asset_id)
+                .where(PriceHistory.date == day_datetime)
+            ).first()
+            
+            if existing:
+                if abs(existing.price - price) > 0.0001:
+                    existing.price = price
+                    session.add(existing)
+            else:
+                new_price = PriceHistory(
+                    asset_id=asset_id,
+                    date=day_datetime,
+                    price=price
+                )
+                session.add(new_price)
+    
+    session.commit()
+
+def _backfill_range(session: Session, start_date: date, end_date: date):
+    """Backfill snapshots for a date range (inclusive)."""
+    current_date = start_date
+    while current_date <= end_date:
+        day_start = datetime(current_date.year, current_date.month, current_date.day)
+        day_end = datetime(current_date.year, current_date.month, current_date.day, 23, 59, 59)
+        
+        existing = session.exec(
+            select(PortfolioSnapshot)
+            .where(PortfolioSnapshot.date >= day_start)
+            .where(PortfolioSnapshot.date <= day_end)
+        ).first()
+
+        if not existing:
+            vals = calculate_portfolio_value_at_date(session, current_date)
+            snapshot = PortfolioSnapshot(
+                date=day_start,
+                total_equity=vals["total_equity"],
+                total_cash=vals["total_cash"],
+                total_invested=vals["total_invested"],
+                currency="USD"
+            )
+            session.add(snapshot)
+            session.commit()
+            print(f"Backfilled snapshot for {current_date}: ${vals['total_equity']:.2f}")
+        
+        current_date += timedelta(days=1)
+
+
+def backfill_history(session: Session):
+    """
+    Backfill PortfolioSnapshot entries from the first transaction date until today.
+    Also fetches daily historical prices for all assets to ensure accuracy.
+    """
+    first_tx = session.exec(select(Transaction).order_by(Transaction.date)).first()
+    if not first_tx:
+        return
+
+    start_date = first_tx.date.date()
+    today = datetime.utcnow().date()
+    
+    # 1. Identify all assets involved in relevant transactions
+    # (Actually we want history for ALL assets that might be held)
+    # Simple approach: Get all assets
+    assets = session.exec(select(Asset)).all()
+    symbols = [a.symbol for a in assets if a.symbol]
+    
+    if symbols:
+        # 2. Fetch daily history for all symbols
+        print(f"Fetching historical prices for {len(symbols)} assets from {start_date}...")
+        price_data = get_price_history_batch(symbols, start_date, today)
+        
+        # 3. Update PriceHistory table
+        _update_price_history(session, price_data, assets)
+        print("Price history updated.")
+
+    # 4. Backfill snapshots
+    _backfill_range(session, start_date, today)
+
+
+def rebuild_snapshots_from(session: Session, from_date: date):
+    """
+    Delete all snapshots on or after from_date, then re-backfill.
+    Called after account creation or data changes that affect historical values.
+    """
+    from_datetime = datetime(from_date.year, from_date.month, from_date.day)
+    
+    # Delete existing snapshots from this date onwards
+    old_snapshots = session.exec(
+        select(PortfolioSnapshot).where(PortfolioSnapshot.date >= from_datetime)
+    ).all()
+    for snap in old_snapshots:
+        session.delete(snap)
+    session.commit()
+    
+    # Check if we need to fetch history (might be needed if we rebuild from far past)
+    # Reuse backfill logic but only for range? Or just rely on backfill_history logic?
+    # Ideally should pre-fetch history for this range too.
+    
+    today = datetime.utcnow().date()
+    
+    # Fetch history for this range
+    assets = session.exec(select(Asset)).all()
+    symbols = [a.symbol for a in assets if a.symbol]
+    if symbols:
+        price_data = get_price_history_batch(symbols, from_date, today)
+        _update_price_history(session, price_data, assets)
+
+    # Re-backfill from the given date
+    _backfill_range(session, from_date, today)
+
+
 def record_daily_snapshot(session: Session) -> Optional[PortfolioSnapshot]:
     """Check if snapshot exists for today. If not, calculate and save."""
     today = datetime.utcnow().date()
     # Check existing
-    existing = session.exec(
-        select(PortfolioSnapshot).where(PortfolioSnapshot.date >= today) # Simple check for today
-    ).first()
-    
-    # Actually, comparison strictly on date part
-    # SQLite datetime is string mostly.
-    # Let's use range for today
     start_of_day = datetime(today.year, today.month, today.day)
     
     existing = session.exec(
@@ -152,10 +357,14 @@ def record_daily_snapshot(session: Session) -> Optional[PortfolioSnapshot]:
     # Calculate equity
     summary = calculate_summary(session)
     equity = summary["total_equity"]
+    cash = summary["total_cash"]
+    invested = summary["total_invested"]
 
     snapshot = PortfolioSnapshot(
         date=datetime.utcnow(),
         total_equity=equity,
+        total_cash=cash,
+        total_invested=invested,
         currency="USD"
     )
     session.add(snapshot)

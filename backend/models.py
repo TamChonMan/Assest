@@ -23,6 +23,7 @@ class Account(SQLModel, table=True):
     type: AccountType
     currency: str = Field(default="HKD")
     balance: float = Field(default=0.0)
+    inception_date: Optional[datetime] = Field(default_factory=datetime.utcnow)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 

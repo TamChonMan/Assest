@@ -20,7 +20,7 @@ const COLORS = [
 
 export default function AllocationChart({ data }: AllocationChartProps) {
     const { t } = useI18n();
-    const { format } = useCurrency();
+    const { formatNative, currency } = useCurrency();
 
     // Sort by value desc
     const sortedData = [...data].sort((a, b) => b.value - a.value);
@@ -59,7 +59,7 @@ export default function AllocationChart({ data }: AllocationChartProps) {
                             ))}
                         </Pie>
                         <Tooltip
-                            formatter={(value: any) => format(Number(value))}
+                            formatter={(value: any) => formatNative(Number(value), currency)}
                             contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '12px', color: '#fff' }}
                             itemStyle={{ color: '#e4e4e7' }}
                         />
