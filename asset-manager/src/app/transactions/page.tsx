@@ -16,6 +16,7 @@ interface Account {
 interface TransactionRecord {
     id: number; date: string; type: string; account_id: number; asset_id: number | null;
     quantity: number | null; price: number | null; fee: number | null; total: number; notes: string | null;
+    asset_symbol?: string | null;
 }
 
 export default function TransactionsPage() {
@@ -23,7 +24,7 @@ export default function TransactionsPage() {
     const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const { t } = useI18n();
-    const { format, formatFrom } = useCurrency();
+    const { format, formatFrom, formatNative } = useCurrency();
 
     const [txType, setTxType] = useState('DEPOSIT');
     const [accountId, setAccountId] = useState<number | ''>('');
@@ -144,7 +145,7 @@ export default function TransactionsPage() {
 
             const payload: Record<string, unknown> = {
                 type: txType, account_id: accountId, total: parseFloat(total),
-                date: new Date(txDate + 'T00:00:00').toISOString(), notes: notes || null,
+                date: new Date(txDate + 'T00:00:00Z').toISOString(), notes: notes || null,
                 currency: txCurrency, // Send detected currency
                 tags: tags || null,   // Send tags
             };
@@ -320,6 +321,7 @@ export default function TransactionsPage() {
                     <div className="space-y-2">
                         {transactions.map((tx) => {
                             const txMeta = txTypes.find(txItem => txItem.value === tx.type);
+                            const txAccount = accounts.find(a => a.id === tx.account_id);
                             const Icon = txMeta?.icon || DollarSign;
                             const isInflow = tx.type === 'DEPOSIT' || tx.type === 'SELL';
                             return (
@@ -329,16 +331,19 @@ export default function TransactionsPage() {
                                             <Icon size={16} className={txMeta?.color || 'text-zinc-400'} />
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-sm text-zinc-900">{txMeta?.label || tx.type}</p>
+                                            <p className="font-semibold text-sm text-zinc-900">
+                                                {txMeta?.label || tx.type}
+                                                {tx.asset_symbol && <span className="ml-1.5 text-zinc-500 font-medium text-xs bg-zinc-100 px-1.5 py-0.5 rounded">{tx.asset_symbol}</span>}
+                                            </p>
                                             <p className="text-[11px] text-zinc-400">{getAccountName(tx.account_id)} • {new Date(tx.date).toLocaleDateString()}</p>
                                         </div>
                                     </div>
                                     <div className="text-right">
                                         <p className={`font-bold text-sm ${isInflow ? 'text-emerald-600' : 'text-red-500'}`}>
-                                            {isInflow ? '+' : '-'}{format(tx.total)}
+                                            {isInflow ? '+' : '-'}{formatNative(tx.total, txAccount?.currency || 'USD')}
                                         </p>
                                         <div className="flex items-center justify-end gap-2 mt-0.5">
-                                            {tx.quantity && <p className="text-[11px] text-zinc-400">{tx.quantity} × {format(tx.price || 0)}</p>}
+                                            {tx.quantity && <p className="text-[11px] text-zinc-400">{tx.quantity} × {formatNative(tx.price || 0, 'USD')}</p>}
                                             <button onClick={() => handleEdit(tx)} className="text-zinc-400 hover:text-indigo-500 transition-colors p-1" title="Edit">
                                                 <Pencil size={12} />
                                             </button>

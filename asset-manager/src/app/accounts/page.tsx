@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { Plus, Building2, TrendingUp, Bitcoin, Wallet, X, Calendar } from 'lucide-react';
+import { Plus, Building2, TrendingUp, Bitcoin, Wallet, X, Calendar, Trash2 } from 'lucide-react';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency } from '@/context/CurrencyContext';
 
@@ -66,6 +66,18 @@ export default function AccountsPage() {
         } catch (error) { console.error('Failed to create account', error); }
     };
 
+    const deleteAccount = async (id: number, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!window.confirm(t('accounts.delete_confirm') || 'Are you sure you want to delete this account? This will delete all associated transactions.')) return;
+        try {
+            await api.delete(`/accounts/${id}`);
+            fetchAccounts();
+        } catch (error) {
+            console.error('Failed to delete account', error);
+            alert('Failed to delete account');
+        }
+    };
+
     return (
         <div className="space-y-8">
             <header className="flex justify-between items-start">
@@ -102,6 +114,13 @@ export default function AccountsPage() {
                             <div key={acc.id} className="card group cursor-pointer relative overflow-hidden">
                                 {/* Gradient top bar */}
                                 <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${config.gradient} opacity-0 group-hover:opacity-100 transition-smooth`} />
+                                <button
+                                    onClick={(e) => deleteAccount(acc.id, e)}
+                                    className="absolute top-3 right-3 p-1.5 text-zinc-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100 z-10"
+                                    title="Delete Account"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className={`icon-badge ${config.soft}`}>
                                         <span className="text-sm">{config.emoji}</span>

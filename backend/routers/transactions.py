@@ -9,7 +9,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
-from sqlmodel import Session, select
+from sqlmodel import Session, select, SQLModel
 
 from database import get_session
 from models import Account, Asset, Transaction, TransactionType
@@ -187,16 +187,48 @@ def create_transaction(
     return transaction
 
 
-@router.get("/", response_model=List[Transaction])
+
+class TransactionRead(SQLModel):
+    id: int
+    date: datetime
+    type: TransactionType
+    status: str
+    account_id: int
+    asset_id: Optional[int] = None
+    quantity: Optional[float] = None
+    price: Optional[float] = None
+    fee: Optional[float] = None
+    total: float
+    notes: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+    asset_symbol: Optional[str] = None
+
+@router.get("/", response_model=List[TransactionRead])
 def list_transactions(
     account_id: Optional[int] = Query(default=None),
     session: Session = Depends(get_session),
 ):
-    statement = select(Transaction)
+    # Join Asset to get symbol
+    statement = select(Transaction, Asset.symbol).outerjoin(Asset, Transaction.asset_id == Asset.id)
+    
     if account_id is not None:
         statement = statement.where(Transaction.account_id == account_id)
+    
     statement = statement.order_by(Transaction.date.desc())
-    return session.exec(statement).all()
+    
+    results = session.exec(statement).all()
+    
+    # Map results to TransactionRead
+    transactions = []
+    for tx, symbol in results:
+        # Create a copy of transaction data and add symbol
+        # We can use model_validate to clone and update, or simple constructor
+        tx_data = tx.model_dump()
+        tx_data["asset_symbol"] = symbol
+        transactions.append(TransactionRead(**tx_data))
+        
+    return transactions
 
 
 class TransactionUpdate(BaseModel):
