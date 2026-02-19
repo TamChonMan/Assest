@@ -3,8 +3,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import api from '@/lib/api';
 import {
-    ArrowDownLeft, ArrowUpRight, TrendingUp, TrendingDown,
-    Plus, Search, Calendar, DollarSign, AlertCircle, CheckCircle2, Pencil, X
+    Plus, Search, Calendar, DollarSign, AlertCircle, CheckCircle2, Pencil, X,
+    ChevronDown, ChevronRight,
+    ArrowDownLeft, ArrowUpRight, TrendingUp, TrendingDown
 } from 'lucide-react';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency } from '@/context/CurrencyContext';
@@ -44,6 +45,10 @@ export default function TransactionsPage() {
     const [symbolName, setSymbolName] = useState('');
     // Edit State
     const [editingTxId, setEditingTxId] = useState<number | null>(null);
+    // Collapse State
+    const [collapsed, setCollapsed] = useState<Record<number, boolean>>({});
+
+    const toggleAccount = (id: number) => setCollapsed(prev => ({ ...prev, [id]: !prev[id] }));
 
     const txTypes = [
         { value: 'DEPOSIT', label: t('tx.deposit'), icon: ArrowDownLeft, gradient: 'from-emerald-500 to-teal-500', soft: 'bg-emerald-50', color: 'text-emerald-600' },
@@ -318,40 +323,77 @@ export default function TransactionsPage() {
                         <p className="text-zinc-500 mt-1 text-sm">{t('tx.no_transactions_desc')}</p>
                     </div>
                 ) : (
-                    <div className="space-y-2">
-                        {transactions.map((tx) => {
-                            const txMeta = txTypes.find(txItem => txItem.value === tx.type);
-                            const txAccount = accounts.find(a => a.id === tx.account_id);
-                            const Icon = txMeta?.icon || DollarSign;
-                            const isInflow = tx.type === 'DEPOSIT' || tx.type === 'SELL';
+                    <div className="space-y-6">
+                        {accounts.map(account => {
+                            const accountTxs = transactions.filter(tx => tx.account_id === account.id);
+                            if (accountTxs.length === 0) return null;
+
                             return (
-                                <div key={tx.id} className="card flex items-center justify-between py-3 px-5">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`icon-badge ${txMeta?.soft || 'bg-zinc-50'}`}>
-                                            <Icon size={16} className={txMeta?.color || 'text-zinc-400'} />
+                                <div key={account.id} className="space-y-2">
+                                    <button
+                                        onClick={() => toggleAccount(account.id)}
+                                        className="flex items-center gap-2 w-full text-left group"
+                                    >
+                                        <div className={`p-1 rounded-md transition-colors ${collapsed[account.id] ? 'bg-zinc-100 text-zinc-500' : 'bg-violet-50 text-violet-600'}`}>
+                                            {collapsed[account.id] ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
                                         </div>
-                                        <div>
-                                            <p className="font-semibold text-sm text-zinc-900">
-                                                {txMeta?.label || tx.type}
-                                                {tx.asset_symbol && <span className="ml-1.5 text-zinc-500 font-medium text-xs bg-zinc-100 px-1.5 py-0.5 rounded">{tx.asset_symbol}</span>}
-                                            </p>
-                                            <p className="text-[11px] text-zinc-400">{getAccountName(tx.account_id)} • {new Date(tx.date).toLocaleDateString()}</p>
+                                        <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider group-hover:text-zinc-700 transition-colors">
+                                            {account.name}
+                                        </h3>
+                                        <span className="text-xs text-zinc-400 font-medium">({accountTxs.length})</span>
+                                        <div className="flex-1 h-px bg-zinc-100 ml-2 group-hover:bg-zinc-200 transition-colors" />
+                                    </button>
+
+                                    {!collapsed[account.id] && (
+                                        <div className="space-y-2 animate-in slide-in-from-top-2 duration-200">
+                                            {accountTxs.map((tx) => {
+                                                const txMeta = txTypes.find(txItem => txItem.value === tx.type);
+                                                const Icon = txMeta?.icon || DollarSign;
+                                                const isInflow = tx.type === 'DEPOSIT' || tx.type === 'SELL' || tx.type === 'DIVIDEND' || tx.type === 'INTEREST';
+                                                return (
+                                                    <div key={tx.id} className="card flex items-center justify-between py-3 px-5">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className={`icon-badge ${txMeta?.soft || 'bg-zinc-50'}`}>
+                                                                <Icon size={16} className={txMeta?.color || 'text-zinc-400'} />
+                                                            </div>
+                                                            <div>
+                                                                <p className="font-semibold text-sm text-zinc-900">
+                                                                    {txMeta?.label || tx.type}
+                                                                    {tx.asset_symbol && <span className="ml-1.5 text-zinc-500 font-medium text-xs bg-zinc-100 px-1.5 py-0.5 rounded">{tx.asset_symbol}</span>}
+                                                                </p>
+                                                                <p className="text-[11px] text-zinc-400">{new Date(tx.date).toLocaleDateString()}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className={`font-bold text-sm ${isInflow ? 'text-emerald-600' : 'text-red-500'}`}>
+                                                                {isInflow ? '+' : '-'}{formatNative(tx.total, account.currency)}
+                                                            </p>
+                                                            <div className="flex items-center justify-end gap-2 mt-0.5">
+                                                                {tx.quantity && <p className="text-[11px] text-zinc-400">{tx.quantity} × {formatNative(tx.price || 0, 'USD')}</p>}
+                                                                <button onClick={() => handleEdit(tx)} className="text-zinc-400 hover:text-indigo-500 transition-colors p-1" title="Edit">
+                                                                    <Pencil size={12} />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className={`font-bold text-sm ${isInflow ? 'text-emerald-600' : 'text-red-500'}`}>
-                                            {isInflow ? '+' : '-'}{formatNative(tx.total, txAccount?.currency || 'USD')}
-                                        </p>
-                                        <div className="flex items-center justify-end gap-2 mt-0.5">
-                                            {tx.quantity && <p className="text-[11px] text-zinc-400">{tx.quantity} × {formatNative(tx.price || 0, 'USD')}</p>}
-                                            <button onClick={() => handleEdit(tx)} className="text-zinc-400 hover:text-indigo-500 transition-colors p-1" title="Edit">
-                                                <Pencil size={12} />
-                                            </button>
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
                             );
                         })}
+                        {/* Show any orphaned transactions? unlikely but safe to check */}
+                        {transactions.some(tx => !accounts.find(a => a.id === tx.account_id)) && (
+                            <div className="space-y-2">
+                                <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider ml-1">Other</h3>
+                                {transactions.filter(tx => !accounts.find(a => a.id === tx.account_id)).map(tx => (
+                                    <div key={tx.id} className="card py-3 px-5 text-zinc-500">
+                                        Transaction #{tx.id} (Account deleted)
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

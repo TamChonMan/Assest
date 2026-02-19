@@ -7,7 +7,7 @@ Handles cross-currency logic (Asset Currency -> Account Currency).
 from datetime import datetime
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from pydantic import BaseModel
 from sqlmodel import Session, select, SQLModel
 
@@ -111,9 +111,10 @@ def _convert_currency(amount: float, from_curr: str, to_curr: str) -> float:
 @router.post("/", response_model=Transaction)
 def create_transaction(
     payload: TransactionCreate,
+    background_tasks: BackgroundTasks,
     session: Session = Depends(get_session),
 ):
-    from services.portfolio import rebuild_snapshots_from
+    from services.portfolio import run_rebuild_snapshots_background
 
     # 1. Validate account exists
     account = session.get(Account, payload.account_id)
@@ -178,11 +179,8 @@ def create_transaction(
     
     # NEW: Trigger historical snapshot rebuild / backfill
     # Rebuild from this transaction date onwards to capture historical price changes
-    try:
-        rebuild_snapshots_from(session, payload.date.date())
-    except Exception as e:
-        print(f"Error rebuilding snapshots: {e}")
-        # Don't fail the request if rebuild fails, but log it.
+    # Async background task
+    background_tasks.add_task(run_rebuild_snapshots_background, payload.date.date())
 
     return transaction
 
@@ -267,9 +265,10 @@ def _apply_balance_change(account: Account, tx_type: TransactionType, amount: fl
 def update_transaction(
     transaction_id: int,
     payload: TransactionUpdate,
+    background_tasks: BackgroundTasks,
     session: Session = Depends(get_session),
 ):
-    from services.portfolio import rebuild_snapshots_from
+    from services.portfolio import run_rebuild_snapshots_background
 
     # 1. Get existing transaction
     tx = session.get(Transaction, transaction_id)
@@ -334,9 +333,6 @@ def update_transaction(
     # NEW: Trigger snapshot rebuild
     # Use earliest of old or new date to ensure full history correction
     rebuild_date = min(old_date, tx.date).date() if tx.date else old_date.date()
-    try:
-        rebuild_snapshots_from(session, rebuild_date)
-    except Exception as e:
-        print(f"Error rebuilding snapshots: {e}")
+    background_tasks.add_task(run_rebuild_snapshots_background, rebuild_date)
 
     return tx

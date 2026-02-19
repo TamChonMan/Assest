@@ -11,13 +11,18 @@ A full-stack portfolio tracking system for retail investors to manage multi-curr
 ### 💰 Account Management | 帳戶管理
 - Create and manage multiple bank/brokerage accounts
 - Support for multiple currencies (USD, HKD, MOP, CNY, TWD, JPY, EUR, GBP)
+- Support for multiple currencies (USD, HKD, MOP, CNY, TWD, JPY, EUR, GBP)
 - Auto-balance tracking — deposits, withdrawals, and fees update balances automatically
+- **Account Inception Date** — Set initial date for accurate historical tracking
+- **Delete Account** — Safely delete accounts and associated data via UI
 
 ### 📊 Transaction Engine | 交易引擎
 - Full CRUD for transactions: Buy, Sell, Deposit, Withdraw, Interest, Dividend, Fee
 - Edit and delete existing transactions with automatic balance recalculation
 - **Smart currency detection** — auto-detects currency from stock symbol suffix (`.HK` → HKD, `.TW` → TWD)
 - **Symbol validation** via Yahoo Finance before trade execution
+- **Grouped & Collapsible View** — Recent transactions grouped by account for better organization
+- **Asset Symbol Display** — View trading symbols directly in transaction lists
 - Auto-creates assets on first buy, auto-deducts account balance
 
 ### 📈 Holdings & Portfolio | 持倉與投資組合
@@ -28,6 +33,9 @@ A full-stack portfolio tracking system for retail investors to manage multi-curr
 
 ### 📉 Analytics & History | 分析與歷史
 - **Historical portfolio rebuild** — reconstructs daily snapshots from transaction history (backfill from 2020)
+- **Daily Price Backfill** — Fetches historical closing prices from Yahoo Finance for accurate asset valuation over time
+- **Smart Caching** — Optimizes data fetching by checking local DB before querying external APIs
+- **Automated Snapshots** — Background scheduler records daily portfolio value
 - Total Asset Trend chart with interactive tooltips
 - Asset allocation donut chart
 
@@ -72,6 +80,7 @@ graph TD
         V --> Y[history_rebuilder.py]
         W --> Z[(SQLite DB)]
         X --> AA[Yahoo Finance API]
+        BB[Scheduler] --> Y
     end
 
     Frontend -->|REST API| Backend
@@ -146,6 +155,7 @@ Assest/
 | **ORM** | SQLModel (SQLAlchemy) | Type-safe models |
 | **Database** | SQLite | Lightweight local storage |
 | **Market Data** | yfinance | Real-time & historical prices |
+| **Scheduling** | APScheduler | Daily background snapshot jobs |
 | **Migrations** | Alembic | Schema evolution |
 | **Testing** | Pytest | 9 test suites |
 
@@ -228,6 +238,7 @@ erDiagram
         enum type "BANK | STOCK | CRYPTO"
         string currency "HKD, USD, ..."
         float balance
+        datetime inception_date
     }
     Asset {
         int id PK

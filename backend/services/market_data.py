@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 from datetime import date, timedelta
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 def get_asset_price(symbol: str) -> float:
     """
@@ -90,17 +90,66 @@ def validate_symbol_exists(symbol: str) -> dict:
         return {"valid": False, "symbol": symbol}
 
 
-def get_price_history_batch(symbols: List[str], start_date: date, end_date: date) -> Dict[date, Dict[str, float]]:
+def get_price_history_batch(
+    symbols: List[str], 
+    start_date: date, 
+    end_date: date,
+    existing_data: Optional[Dict[date, Dict[str, float]]] = None
+) -> Dict[date, Dict[str, float]]:
     """
     Fetches historical closing prices for multiple symbols.
     Returns: { date: { symbol: price } }
-    Handles forward-filling logic for weekends/holidays if needed, 
-    or returns available data.
+    
+    OPTIMIZATION: If existing_data is provided, checks gaps and only fetches missing.
     """
     if not symbols:
         return {}
+
+    # Define the full range of dates needed (business days approx)
+    # Actually, simpler: just identify which (symbol, date) are missing?
+    # Fetching by range is API constrained. We can't fetch "dates 1, 3, 5".
+    # Best approach: Check if we have *most* data. 
+    # If we are missing data for a symbol in the range, we fetch the range for that symbol.
+    
+    symbols_to_fetch = set()
+    
+    if existing_data:
+        # Check each symbol: do we have data for it in the range?
+        # This is a heuristic. If we have meaningful data, we assume it's good?
+        # Or checking start/end?
+        # Strict approach: Iterate all days? Too slow.
+        # fast check: if symbol is in existing_data for *some* dates, is it enough?
+        # Let's check if the symbol has data covering start_date to end_date.
         
+        # Flatten existing data to {symbol: {date, ...}}
+        existing_by_symbol = {}
+        for d, prices in existing_data.items():
+            if not d: continue
+            # Filter range
+            if start_date <= d <= end_date:
+                for sym, p in prices.items():
+                    if sym not in existing_by_symbol: existing_by_symbol[sym] = 0
+                    existing_by_symbol[sym] += 1
+        
+        # Estimate expected days (approx 5/7 of range)
+        days_delta = (end_date - start_date).days
+        expected_days = max(1, int(days_delta * 0.6)) # rough estimate for weekends/holidays
+        
+        for sym in symbols:
+            count = existing_by_symbol.get(sym, 0)
+            if count < expected_days:
+                symbols_to_fetch.add(sym)
+    else:
+        symbols_to_fetch = set(symbols)
+
+    if not symbols_to_fetch:
+        print(f"Smart Cache: All {len(symbols)} assets have sufficient data. Skipping download.")
+        return {}
+
     try:
+        fetch_list = list(symbols_to_fetch)
+        print(f"Smart Cache: Fetching history for {len(fetch_list)}/{len(symbols)} assets...")
+        
         # yfinance expects YYYY-MM-DD strings
         start_str = start_date.strftime("%Y-%m-%d")
         # end_date in yfinance is exclusive, so add 1 day to include end_date
@@ -108,23 +157,18 @@ def get_price_history_batch(symbols: List[str], start_date: date, end_date: date
         
         # Download batch
         # threads=True for speed
-        df = yf.download(symbols, start=start_str, end=end_str, progress=False, threads=True)['Close']
+        df = yf.download(fetch_list, start=start_str, end=end_str, progress=False, threads=True)['Close']
         
         if df.empty:
             return {}
             
         # Reformat to Dict[date, Dict[symbol, price]]
-        # df index is DatetimeIndex. Columns are symbols (or single Series if 1 symbol).
         
         # Handle single symbol case (Series)
         if isinstance(df, pd.Series):
-             # Name is the symbol? Or just 'Close'?
-             # Usually yf.download(['AAPL']) returns DataFrame even for 1 symbol if asking for 'Close'?
-             # If I ask for just 'Close', and 1 symbol, it might be Series.
-             # Safe bet: force DataFrame
              df = df.to_frame()
-             if len(symbols) == 1:
-                 df.columns = symbols
+             if len(fetch_list) == 1:
+                 df.columns = fetch_list
 
         # Handle formatting
         result = {}
@@ -134,7 +178,7 @@ def get_price_history_batch(symbols: List[str], start_date: date, end_date: date
         for dt, row in df.iterrows():
             d = dt.date()
             result[d] = {}
-            for sym in symbols:
+            for sym in fetch_list:
                 if sym in row and pd.notna(row[sym]):
                     result[d][sym] = float(row[sym])
                     

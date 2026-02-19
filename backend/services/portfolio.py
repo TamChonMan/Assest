@@ -4,6 +4,7 @@ Portfolio Service: Calculates holdings, average cost, and P/L from transaction h
 from datetime import datetime, date, timedelta
 from typing import Optional, List, Dict
 from sqlmodel import Session, select
+from database import engine
 from models import Transaction, TransactionType, Asset, Account, PortfolioSnapshot, PriceHistory
 from services.market_data import get_asset_price, get_price_history_batch
 
@@ -299,7 +300,25 @@ def backfill_history(session: Session):
     if symbols:
         # 2. Fetch daily history for all symbols
         print(f"Fetching historical prices for {len(symbols)} assets from {start_date}...")
-        price_data = get_price_history_batch(symbols, start_date, today)
+        
+        # Check existing data to minimize API calls
+        start_datetime = datetime(start_date.year, start_date.month, start_date.day)
+        existing_rows = session.exec(
+            select(PriceHistory)
+            .where(PriceHistory.date >= start_datetime)
+        ).all()
+        
+        existing_data = {}
+        for row in existing_rows:
+            d = row.date.date()
+            if d not in existing_data: existing_data[d] = {}
+            # Need symbol... PriceHistory has asset_id. Need map.
+            # Efficiently map asset_id -> symbol
+            asset = next((a for a in assets if a.id == row.asset_id), None)
+            if asset and asset.symbol:
+                existing_data[d][asset.symbol] = row.price
+
+        price_data = get_price_history_batch(symbols, start_date, today, existing_data=existing_data)
         
         # 3. Update PriceHistory table
         _update_price_history(session, price_data, assets)
@@ -331,14 +350,43 @@ def rebuild_snapshots_from(session: Session, from_date: date):
     today = datetime.utcnow().date()
     
     # Fetch history for this range
+    # Fetch history for this range
     assets = session.exec(select(Asset)).all()
     symbols = [a.symbol for a in assets if a.symbol]
     if symbols:
-        price_data = get_price_history_batch(symbols, from_date, today)
-        _update_price_history(session, price_data, assets)
+        # Check existing data to minimize API calls
+        start_datetime = datetime(from_date.year, from_date.month, from_date.day)
+        existing_rows = session.exec(
+            select(PriceHistory)
+            .where(PriceHistory.date >= start_datetime)
+        ).all()
+        
+        existing_data = {}
+        asset_map_id = {a.id: a.symbol for a in assets} # optimize lookup
+
+        for row in existing_rows:
+            d = row.date.date()
+            if d not in existing_data: existing_data[d] = {}
+            if row.asset_id in asset_map_id:
+                sym = asset_map_id[row.asset_id]
+                existing_data[d][sym] = row.price
+
+        price_data = get_price_history_batch(symbols, from_date, today, existing_data=existing_data)
+        if price_data:
+            _update_price_history(session, price_data, assets)
 
     # Re-backfill from the given date
     _backfill_range(session, from_date, today)
+
+
+def run_rebuild_snapshots_background(from_date: date):
+    """Wrapper to run rebuild in background with fresh session."""
+    try:
+        with Session(engine) as session:
+            rebuild_snapshots_from(session, from_date)
+            print(f"Background rebuild complete from {from_date}")
+    except Exception as e:
+        print(f"Error in background rebuild: {e}")
 
 
 def record_daily_snapshot(session: Session) -> Optional[PortfolioSnapshot]:
