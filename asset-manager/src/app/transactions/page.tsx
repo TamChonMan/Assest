@@ -33,7 +33,7 @@ export default function TransactionsPage() {
     const [symbol, setSymbol] = useState('');
     const [quantity, setQuantity] = useState('');
     const [price, setPrice] = useState('');
-    const [tags, setTags] = useState('');
+    // tags removed
     const [notes, setNotes] = useState('');
     const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -97,14 +97,14 @@ export default function TransactionsPage() {
         // We need to fetch asset details or we can't edit symbol easily.
         // For now, let's clear symbol if we can't find it, or fetching it.
         // We'll skip symbol fetching for this step to verify basic edit first.
-        setSymbol(''); setTags('');
+        setSymbol('');
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const cancelEdit = () => {
         setEditingTxId(null);
-        setTotal(''); setSymbol(''); setQuantity(''); setPrice(''); setNotes(''); setTags('');
+        setTotal(''); setSymbol(''); setQuantity(''); setPrice(''); setNotes('');
         setTxDate(new Date().toISOString().split('T')[0]);
         setSymbolValid(null); setSymbolName('');
         setAccountId('');
@@ -152,7 +152,6 @@ export default function TransactionsPage() {
                 type: txType, account_id: accountId, total: parseFloat(total),
                 date: new Date(txDate + 'T00:00:00Z').toISOString(), notes: notes || null,
                 currency: txCurrency, // Send detected currency
-                tags: tags || null,   // Send tags
             };
             if (isTradeType) { payload.quantity = parseFloat(quantity); payload.price = parseFloat(price); payload.symbol = symbol; }
 
@@ -166,7 +165,7 @@ export default function TransactionsPage() {
                 setSuccess(`${txLabel} $${total} ${t('tx.success')}`);
             }
 
-            setTotal(''); setSymbol(''); setQuantity(''); setPrice(''); setNotes(''); setTags('');
+            setTotal(''); setSymbol(''); setQuantity(''); setPrice(''); setNotes('');
             setTxDate(new Date().toISOString().split('T')[0]);
             setSymbolValid(null); setSymbolName(''); // Reset validation
             fetchData();
@@ -269,12 +268,7 @@ export default function TransactionsPage() {
                         </div>
                     )}
 
-                    {isTradeType && (
-                        <div>
-                            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">{t('tx.tags')}</label>
-                            <input type="text" value={tags} onChange={(e) => setTags(e.target.value)} placeholder={t('tx.tags_placeholder')} className="w-full px-4 py-2.5 text-zinc-900 bg-white focus:outline-none" />
-                        </div>
-                    )}
+
 
                     <div>
                         <label className="block text-sm font-semibold text-zinc-700 mb-1.5">

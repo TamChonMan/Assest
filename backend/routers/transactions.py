@@ -30,7 +30,7 @@ class TransactionCreate(BaseModel):
     asset_id: Optional[int] = None
     symbol: Optional[str] = None      # e.g. "AAPL", "0700.HK"
     currency: Optional[str] = None    # Currency of the transaction amount (e.g. HKD for 0700.HK)
-    tags: Optional[str] = None        # NEW: Comma-separated tags e.g. "Tech,China"
+    # tags removed
     quantity: Optional[float] = None
     price: Optional[float] = None
     fee: Optional[float] = None
@@ -71,25 +71,17 @@ def _detect_currency_from_symbol(symbol: str) -> str:
     return "USD"  # Default for US stocks
 
 
-def _resolve_asset(session: Session, symbol: str, tags: Optional[str] = None) -> Asset:
-    """Look up an existing Asset by symbol, or auto-create one. Updates tags if provided."""
+def _resolve_asset(session: Session, symbol: str) -> Asset:
+    """Look up an existing Asset by symbol, or auto-create one."""
     statement = select(Asset).where(Asset.symbol == symbol)
     asset = session.exec(statement).first()
     
     if asset:
-        # Update tags if provided
-        if tags:
-            current_tags = set(asset.tags.split(",")) if asset.tags else set()
-            new_tags = set(t.strip() for t in tags.split(",") if t.strip())
-            merged = current_tags.union(new_tags)
-            if merged:
-                asset.tags = ",".join(sorted(merged))
-                session.add(asset)
         return asset
 
     # Auto-create — detect currency from symbol suffix
     detected_currency = _detect_currency_from_symbol(symbol)
-    asset = Asset(symbol=symbol, name=symbol, type="STOCK", tags=tags, currency=detected_currency)
+    asset = Asset(symbol=symbol, name=symbol, type="STOCK", currency=detected_currency)
     session.add(asset)
     session.flush()          # get the id without committing
     return asset
@@ -125,19 +117,11 @@ def create_transaction(
     asset_id = payload.asset_id
     if payload.type in (TransactionType.BUY, TransactionType.SELL):
         if payload.symbol and not asset_id:
-            asset = _resolve_asset(session, payload.symbol.upper(), tags=payload.tags)
+            asset = _resolve_asset(session, payload.symbol.upper())
             asset_id = asset.id
-        # Also support updating tags if asset_id IS provided?
-        elif asset_id and payload.tags:
-            asset = session.get(Asset, asset_id)
-            if asset:
-                 # Logic repeated, could be refactored, but inline for now
-                current_tags = set(asset.tags.split(",")) if asset.tags else set()
-                new_tags = set(t.strip() for t in payload.tags.split(",") if t.strip())
-                merged = current_tags.union(new_tags)
-                if merged:
-                    asset.tags = ",".join(sorted(merged))
-                    session.add(asset)
+        elif asset_id:
+             # Just verify existence?
+             pass
 
     # 3. Determine currencies and amounts
     # Default tx_currency to account currency if not specified
@@ -236,7 +220,7 @@ class TransactionUpdate(BaseModel):
     asset_id: Optional[int] = None
     symbol: Optional[str] = None
     currency: Optional[str] = None
-    tags: Optional[str] = None
+    # tags removed
     quantity: Optional[float] = None
     price: Optional[float] = None
     fee: Optional[float] = None
@@ -299,21 +283,10 @@ def update_transaction(
         raise HTTPException(status_code=404, detail="New Account not found")
         
     # 6. Resolve Asset/Tags if changed
-    if payload.symbol or payload.tags:
+    if payload.symbol:
          if payload.symbol: 
-             asset = _resolve_asset(session, payload.symbol, payload.tags)
+             asset = _resolve_asset(session, payload.symbol)
              tx.asset_id = asset.id
-             # tx.symbol = payload.symbol # Not stored directly usually
-         elif tx.asset_id and payload.tags:
-             asset = session.get(Asset, tx.asset_id)
-             if asset:
-                 # Update tags logic same as create
-                 current_tags = set(asset.tags.split(",")) if asset.tags else set()
-                 new_tags = set(t.strip() for t in payload.tags.split(",") if t.strip())
-                 merged = current_tags.union(new_tags)
-                 if merged:
-                     asset.tags = ",".join(sorted(merged))
-                     session.add(asset)
 
     # 7. Recalculate Total
     if payload.total is not None:

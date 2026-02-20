@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from database import create_db_and_tables, get_session, engine
 from models import Account, Asset, Transaction, TransactionType, AccountType
-from routers import market, transactions, portfolio, analytics
+from routers import transactions, portfolio, market, analytics, tags, assets
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -61,6 +61,8 @@ app.include_router(market.router)
 app.include_router(transactions.router)
 app.include_router(portfolio.router)
 app.include_router(analytics.router)
+app.include_router(tags.router)
+app.include_router(assets.router)
 
 @app.post("/accounts/", response_model=Account)
 def create_account(payload: AccountCreate, session: Session = Depends(get_session)):

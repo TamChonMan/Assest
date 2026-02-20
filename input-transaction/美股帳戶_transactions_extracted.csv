@@ -1,0 +1,332 @@
+﻿Trade Date,Settlement Date,Value Date,Reference,B/S,Description,Quantity,Price,Debit,Credit,Balance,Source
+13/01/23,17/01/23,,00030095-000,B,AAPL Apple Inc.(Apple Inc.),1,132.5900,134.58,,,美股帳戶202301.pdf
+13/01/23,17/01/23,,00030096-000,B,TSLA Tesla Inc(Tesla Inc),1,119.3000,121.29,,,美股帳戶202301.pdf
+13/01/23,17/01/23,,00030097-000,B,TSLA Tesla Inc(Tesla Inc),1,119.2600,121.25,,,美股帳戶202301.pdf
+13/01/23,13/01/23,,8,,存入資金-2023/01/12,,,,"1,200.00",822.88,美股帳戶202301.pdf
+18/01/23,19/01/23,,00039551-000,B,TSLA Tesla Inc(Tesla Inc),2,129.7000,261.39,,,美股帳戶202301.pdf
+18/01/23,19/01/23,,00039552-000,B,TSLA Tesla Inc(Tesla Inc),3,129.5000,390.49,,,美股帳戶202301.pdf
+18/01/23,18/01/23,,26,,存入資金-2023/01/17,,,,"1,220.00","1,391.00",美股帳戶202301.pdf
+19/01/23,20/01/23,,00042417-000,B,AAPL Apple Inc.(Apple Inc.),2,135.9600,273.91,,"1,117.09",美股帳戶202301.pdf
+24/01/23,25/01/23,,00049261-000,B,AAPL Apple Inc.(Apple Inc.) TSLA Tesla Inc(Tesla Inc),1,141.0000,142.99,,,美股帳戶202301.pdf
+24/01/23,25/01/23,,00049262-000,B, 存入資金-2023/01/24,1,140.1600,142.15,,,美股帳戶202301.pdf
+24/01/23,24/01/23,,21,, AAPL Apple Inc.(Apple Inc.),,,,"2,500.00","3,331.95",美股帳戶202301.pdf
+27/01/23,31/01/23,,00057572-000,B,AAPL Apple Inc.(Apple Inc.),2,146.4500,294.89,,,美股帳戶202301.pdf
+30/01/23,31/01/23,,00057572-000,B, 存入資金-2023/01/28,2,146.4500,294.89,,,美股帳戶202301.pdf
+30/01/23,30/01/23,,66,, 結餘(2023年01月31日) Balance C/F(31-JAN-2023),,,,"1,250.00","4,287.06",美股帳戶202301.pdf
+03/02/23,06/02/23,,00073335-000,B,AAPL Apple Inc.(Apple Inc.),2,150.6400,303.27,,"3,983.79",美股帳戶202302.pdf
+14/02/23,15/02/23,,00098979-000,B,"TSM Taiwan Semiconductor Manufacturing Co.,(Taiwan Semiconductor Manufacturing Co.,)",1,95.8000,97.79,,,美股帳戶202302.pdf
+14/02/23,15/02/23,,00098980-000,B,TSLA Tesla Inc(Tesla Inc),1,194.0900,196.08,,"3,689.92",美股帳戶202302.pdf
+20/02/23,20/02/23,,1223,,代收股息CASH DIVIDEND: USD0.23/SH (AAPL US) AS AT 20230213 (BROKER PAID ON 17FEB2023) <登記股數: 8> 紅利手續費: Apple Inc.(AAPL),,,,1.84,,美股帳戶202302.pdf
+20/02/23,20/02/23,,1224,, 扣美國稅 Apple Inc.(AAPL),,,0.01,,,美股帳戶202302.pdf
+20/02/23,20/02/23,,1225,,,,,0.56,,"3,691.19",美股帳戶202302.pdf
+22/02/23,23/02/23,,00119527-000,B,AAPL Apple Inc.(Apple Inc.),1,149.2900,151.28,,"3,539.91",美股帳戶202302.pdf
+23/02/23,24/02/23,,00123131-000,B,AAPL Apple Inc.(Apple Inc.),1,148.2100,150.20,,,美股帳戶202302.pdf
+23/02/23,24/02/23,,00123132-000,B,NVDA NVIDIA Corporation(NVIDIA Corporation) TSLA Tesla Inc(Tesla Inc),1,207.6500,209.64,,,美股帳戶202302.pdf
+23/02/23,24/02/23,,00123133-000,B, NVDA NVIDIA Corporation(NVIDIA,1,198.0800,200.07,,"2,980.00",美股帳戶202302.pdf
+24/02/23,27/02/23,,00126236-000,S, Corporation),1,237.1400,,235.13,"3,215.13",美股帳戶202302.pdf
+28/02/23,01/03/23,,00132535-000,B,QQQ Invesco QQQ Trust(Invesco QQQ Trust) 結餘(2023年02月28日) Balance C/F(28-FEB-2023),1,294.4000,296.39,,"2,918.74",美股帳戶202302.pdf
+03/03/23,06/03/23,,00142257-000,B,"TSLA Tesla, Inc.(Tesla, Inc.)",2,188.4700,378.93,,"2,539.81",美股帳戶202303.pdf
+14/03/23,15/03/23,,00168146-000,B,"TSLA Tesla, Inc.(Tesla, Inc.)",2,169.8300,341.65,,"2,198.16",美股帳戶202303.pdf
+15/03/23,16/03/23,,00172088-000,B,AAPL Apple Inc.(Apple Inc.),2,153.2500,308.49,,,美股帳戶202303.pdf
+15/03/23,16/03/23,,00172089-000,B,COST Costco Wholesale Corporation(Costco Wholesale Corporation),1,484.3500,486.34,,"1,403.33",美股帳戶202303.pdf
+16/03/23,16/03/23,,86,,存入資金-2023/03/16,,,,"2,480.00","3,883.33",美股帳戶202303.pdf
+21/03/23,22/03/23,,00187934-000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A) PDD PDD Holdings Inc. Sponsored ADR Class,2,78.6000,159.19,,"3,724.14",美股帳戶202303.pdf
+24/03/23,27/03/23,,00199991-000,B, A(PDD Holdings Inc. Sponsored ADR Class A),8,78.9900,633.91,,,美股帳戶202303.pdf
+24/03/23,27/03/23,,00199992-000,B,AAPL Apple Inc.(Apple Inc.),5,160.1900,802.94,,,美股帳戶202303.pdf
+24/03/23,27/03/23,,00199993-000,B,"TSLA Tesla, Inc.(Tesla, Inc.) 結餘(2023年03月31日) Balance C/F(31-MAR-2023)",4,198.8700,797.47,,"1,489.82",美股帳戶202303.pdf
+03/04/23,04/04/23,,00221116-000,B,AAPL Apple Inc.(Apple Inc.),3,162.8200,490.45,,,美股帳戶202304.pdf
+03/04/23,04/04/23,,00221117-000,B,"TSLA Tesla, Inc.(Tesla, Inc.)",2,201.3394,404.67,,594.70,美股帳戶202304.pdf
+14/04/23,17/04/23,,00240276-000,B,"PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A) TSLA Tesla, Inc.(Tesla, Inc.)",2,68.5900,139.17,,,美股帳戶202304.pdf
+14/04/23,17/04/23,,00240277-000,B,,1,185.6900,187.68,,267.85,美股帳戶202304.pdf
+17/04/23,17/04/23,,746,,代收股息CASH DIVIDEND: USD 0.356345/SH (TSM US) AS AT 20230317 (BROKER PAID ON 14APR2023) <登記股數: 1>,,,,0.35,,美股帳戶202304.pdf
+17/04/23,17/04/23,,747,,"紅利手續費: Taiwan Semiconductor Manufacturing Co.,(TSM) PDD PDD Holdings Inc. Sponsored ADR Class",,,0.01,,268.19,美股帳戶202304.pdf
+19/04/23,20/04/23,,00250103-000,B, A(PDD Holdings Inc. Sponsored ADR Class A),3,71.0000,214.99,,53.20,美股帳戶202304.pdf
+27/04/23,28/04/23,,00268169-000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A),4,65.8300,265.31,,,美股帳戶202304.pdf
+27/04/23,28/04/23,,00268170-000,B,QQQ Invesco QQQ Trust(Invesco QQQ Trust),1,313.5550,315.55,,,美股帳戶202304.pdf
+27/04/23,28/04/23,,00268171-000,B,"TSLA Tesla, Inc.(Tesla, Inc.)",2,156.5200,315.03,,,美股帳戶202304.pdf
+27/04/23,27/04/23,,35,,存入資金-2023/04/26 結餘(2023年04月28日) Balance C/F(28-APR-2023),,,,"5,000.00","4,157.31",美股帳戶202304.pdf
+02/05/23,02/05/23,,824,,代收股息CASH DIVIDEND: USD0.472232/SH (QQQ US) AS AT 20230321 (BROKER PAID ON 01MAY2023) <登記股數: 1> 紅利手續費: Invesco QQQ Trust(QQQ),,,,0.47,,美股帳戶202305.pdf
+02/05/23,02/05/23,,825,, 扣美國稅 Invesco QQQ Trust(QQQ),,,0.01,,,美股帳戶202305.pdf
+02/05/23,02/05/23,,826,, PDD PDD Holdings Inc. Sponsored ADR Class,,,0.15,,"4,157.62",美股帳戶202305.pdf
+09/05/23,10/05/23,,00286590-000,B, A(PDD Holdings Inc. Sponsored ADR Class A),10,61.3000,614.99,,"3,542.63",美股帳戶202305.pdf
+22/05/23,22/05/23,,964,,代收股息CASH DIVIDEND: USD0.24/SH (AAPL US) AS AT 20230515 (BROKER PAID ON 19MAY2023) <登記股數: 20>,,,,4.80,,美股帳戶202305.pdf
+22/05/23,22/05/23,,965,,紅利手續費: Apple Inc.(AAPL),,,0.01,,,美股帳戶202305.pdf
+22/05/23,22/05/23,,966,,扣美國稅 Apple Inc.(AAPL),,,1.44,,"3,545.98",美股帳戶202305.pdf
+23/05/23,23/05/23,,707,,代收股息CASH DIVIDEND: USD1.02/SH (COST US) AS AT 20230505 (BROKER PAID ON 22MAY2023) <登記股數: 1> 紅利手續費: Costco Wholesale,,,,1.02,,美股帳戶202305.pdf
+23/05/23,23/05/23,,708,, Corporation(COST),,,0.01,,,美股帳戶202305.pdf
+23/05/23,23/05/23,,709,,扣美國稅 Costco Wholesale Corporation(COST) 結餘(2023年05月31日) Balance C/F(31-MAY-2023),,,0.31,,"3,546.68",美股帳戶202305.pdf
+01/06/23,02/06/23,,00333565-000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A),6,64.7800,390.67,,,美股帳戶202306.pdf
+01/06/23,02/06/23,,00333566-000,B,"FUTU Futu Holdings Ltd. Sponsored ADR Class A(Futu Holdings Ltd. Sponsored ADR Class A) TSLA Tesla, Inc.(Tesla, Inc.)",10,36.3300,365.29,,,美股帳戶202306.pdf
+01/06/23,02/06/23,,00333567-000,B,,2,198.9900,399.97,,"2,390.75",美股帳戶202306.pdf
+30/06/23,03/07/23,,00391300-000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A) 結餘(2023年06月30日) Balance C/F(30-JUN-2023),8,68.1863,547.48,,"1,843.27",美股帳戶202306.pdf
+10/07/23,11/07/23,,00406893-000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A) 代收股息CASH DIVIDEND: USD0.346803/SH,5,69.1987,347.98,,"1,495.29",美股帳戶202307.pdf
+17/07/23,17/07/23,,1002,, (TSM US) AS AT 20230616 (BROKER PAID ON 14JULY2023) <登記股數: 1>,,,,0.34,,美股帳戶202307.pdf
+17/07/23,17/07/23,,1003,,"紅利手續費: Taiwan Semiconductor Manufacturing Co.,(TSM) 結餘(2023年07月31日) Balance C/F(31-JUL-2023)",,,0.01,,"1,495.62",美股帳戶202307.pdf
+02/08/23,02/08/23,,1505,,代收股息CASH DIVIDEND: USD0.503947/SH (QQQ US) AS AT 20230621 (BROKER PAID ON 1AUG2023) <登記股數: 2> 紅利手續費: Invesco QQQ Trust Series,,,,1.00,,美股帳戶202308.pdf
+02/08/23,02/08/23,,1506,, I(QQQ),,,0.01,,,美股帳戶202308.pdf
+02/08/23,02/08/23,,1507,,扣美國稅 Invesco QQQ Trust Series I(QQQ),,,0.30,,"1,496.31",美股帳戶202308.pdf
+08/08/23,09/08/23,,00473403-000,S,COST Costco Wholesale Corporation(Costco Wholesale Corporation),1,558.9000,,556.89,"2,053.20",美股帳戶202308.pdf
+09/08/23,10/08/23,,00476761-000,B,AAPL Apple Inc.(Apple Inc.),2,178.1000,358.19,,,美股帳戶202308.pdf
+09/08/23,10/08/23,,00476762-000,B,GOOGL Alphabet Inc. Class A(Alphabet Inc. Class A) 代收股息CASH DIVIDEND: USD0.24/SH (AAPL,3,130.1000,392.29,,"1,302.72",美股帳戶202308.pdf
+21/08/23,21/08/23,,1719,, US) AS AT 20230814 (BROKER PAID ON 18AUG2023) <登記股數: 22>,,,,5.28,,美股帳戶202308.pdf
+21/08/23,21/08/23,,1720,,紅利手續費: Apple Inc.(AAPL),,,0.02,,,美股帳戶202308.pdf
+21/08/23,21/08/23,,1721,,扣美國稅 Apple Inc.(AAPL) 結餘(2023年08月31日) Balance C/F(31-AUG-2023),,,1.59,,"1,306.39",美股帳戶202308.pdf
+01/09/23,05/09/23,31/08/23,00527784- 000,S,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A) 存入利息-2023/09/04,13,98.6000,"1,279.78",,"2,586.17",美股帳戶202309.pdf
+04/09/23,04/09/23,04/09/23,1336,,,,,,0.68,"2,586.85",美股帳戶202309.pdf
+14/09/23,15/09/23,13/09/23,00549226- 000,B,AAPL Apple Inc.(Apple Inc.),5,174.9000,876.49,,"1,710.36",美股帳戶202309.pdf
+27/09/23,28/09/23,26/09/23,00573629- 000,B,"TSM Taiwan Semiconductor Manufacturing Co.,(Taiwan Semiconductor Manufacturing Co.,) AAPL Apple Inc.(Apple Inc.)",6,84.2250,507.34,,,美股帳戶202309.pdf
+27/09/23,28/09/23,26/09/23,00573630- 000,B, 結餘(2023年09月29日) Balance C/F(29-SEP-2023),4,172.0883,690.34,,512.68,美股帳戶202309.pdf
+06/10/23,06/10/23,06/10/23,70,,存入利息-2023/10/05,,,,1.41,514.09,美股帳戶202310.pdf
+13/10/23,16/10/23,12/10/23,00599223- 000,S,FUTU Futu Holdings Ltd. Sponsored ADR Class A(Futu Holdings Ltd. Sponsored ADR Class A) 代收股息CASH DIVIDEND:,10,62.0700,618.69,,"1,132.78",美股帳戶202310.pdf
+16/10/23,16/10/23,16/10/23,810,, USD0.367442/SH (TSM US) AS AT 20230915 (BROKER PAID ON 16OCT2023) <登記股數: 1> 紅利手續費: Taiwan Semiconductor,,,,0.36,,美股帳戶202310.pdf
+16/10/23,16/10/23,16/10/23,811,," Manufacturing Co.,(TSM)",,,0.01,,"1,133.13",美股帳戶202310.pdf
+24/10/23,25/10/23,23/10/23,00615603- 000,B,AAPL Apple Inc.(Apple Inc.),3,172.5600,519.67,,,美股帳戶202310.pdf
+24/10/23,25/10/23,23/10/23,00615604- 000,B,"TSLA Tesla, Inc.(Tesla, Inc.) 結餘(2023年10月31日) Balance C/F(31-OCT-2023)",2,214.7889,431.57,,181.89,美股帳戶202310.pdf
+02/11/23,03/11/23,01/11/23,00634193- 000,B,VOO Vanguard S&P 500 ETF(Vanguard S&P 500 ETF),1,387.0683,389.06,,,美股帳戶202311.pdf
+02/11/23,03/11/23,01/11/23,00634194- 000,B,GOOGL Alphabet Inc. Class A(Alphabet Inc. Class A) 存入資金-2023/11/01-2023/11/01,7,125.2800,878.95,,,美股帳戶202311.pdf
+02/11/23,02/11/23,02/11/23,13,, 22:28:04,,,"3,000.00",,"1,913.88",美股帳戶202311.pdf
+06/11/23,06/11/23,06/11/23,748,,代收股息CASH DIVIDEND: USD0.535551020645/SH (QQQ US) AS AT 20230919 (BROKER PAID ON 06NOV2023) <登記股數: 2> 紅利手續費: Invesco QQQ Trust Series,,,,1.07,,美股帳戶202311.pdf
+06/11/23,06/11/23,06/11/23,749,, I(QQQ),,,0.01,,,美股帳戶202311.pdf
+06/11/23,06/11/23,06/11/23,750,,扣美國稅 Invesco QQQ Trust Series I(QQQ),,,0.33,,"1,914.61",美股帳戶202311.pdf
+10/11/23,10/11/23,10/11/23,1137,,存入利息-2023/11/10,,,,0.48,"1,915.09",美股帳戶202311.pdf
+20/11/23,20/11/23,20/11/23,464,,代收股息CASH DIVIDEND: USD0.24/SH (AAPL US) AS AT 20231113 (BROKER PAID ON 20NOV2023) <登記股數: 34>,,,,8.16,,美股帳戶202311.pdf
+20/11/23,20/11/23,20/11/23,465,,紅利手續費: Apple Inc.(AAPL),,,0.02,,,美股帳戶202311.pdf
+20/11/23,20/11/23,20/11/23,466,,扣美國稅 Apple Inc.(AAPL),,,2.45,,"1,920.78",美股帳戶202311.pdf
+29/11/23,30/11/23,28/11/23,00685827- 000,S,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A) 結餘(2023年11月30日) Balance C/F(30-NOV-2023),3,139.4594,416.37,,"2,337.15",美股帳戶202311.pdf
+04/12/23,05/12/23,01/12/23,00694209- 000,B,GOOGL Alphabet Inc. Class A(Alphabet Inc. Class A),3,131.3500,396.04,,"1,941.11",美股帳戶202312.pdf
+12/12/23,12/12/23,12/12/23,768,,存入利息-2023/12/12,,,,1.53,"1,942.64",美股帳戶202312.pdf
+19/12/23,20/12/23,18/12/23,00723255- 000,S,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A),2,147.2200,292.43,,,美股帳戶202312.pdf
+19/12/23,20/12/23,18/12/23,00723256- 000,S,"TSLA Tesla, Inc.(Tesla, Inc.)",2,257.2000,512.39,,"2,747.46",美股帳戶202312.pdf
+28/12/23,28/12/23,28/12/23,911,,代收股息CASH DIVIDEND:USD 1.801098/SH (VOO US) AS AT 20231221(BROKER PAID ON 27 Dec 2023) <登記股數: 1>,,,,1.80,,美股帳戶202312.pdf
+28/12/23,28/12/23,28/12/23,912,,紅利手續費: Vanguard S&P 500 ETF(VOO),,,0.01,,,美股帳戶202312.pdf
+28/12/23,28/12/23,28/12/23,913,,扣美國稅 Vanguard S&P 500 ETF(VOO) 結餘(2023年12月29日) Balance C/F(29-DEC-2023),,,0.54,,"2,748.71",美股帳戶202312.pdf
+04/01/24,05/01/24,03/01/24,00005709- 000,S,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A) 代收股息CASH DIVIDEND:USD 0.80826/SH,3,148.7600,444.27,,,美股帳戶202401.pdf
+04/01/24,04/01/24,04/01/24,347,, (QQQ US) AS AT 20231219 (BROKER PAID ON 29 Dec 2023) <登記股數: 2>,,,,1.61,,美股帳戶202401.pdf
+04/01/24,04/01/24,04/01/24,348,,紅利手續費: Invesco QQQ Trust Series I(QQQ) 扣美國稅 Invesco QQQ Trust Series,,,0.01,,,美股帳戶202401.pdf
+04/01/24,04/01/24,04/01/24,349,, I(QQQ),,,0.49,,"3,194.09",美股帳戶202401.pdf
+08/01/24,08/01/24,05/01/24,26,,CorpAction ADR FEE PDD ADR FEE 0.02 /SH AS AT 20231229,,,0.60,,"3,193.49",美股帳戶202401.pdf
+10/01/24,11/01/24,09/01/24,00015939- 000,B,"FUTU Futu Holdings Ltd. Sponsored ADR Class A(Futu Holdings Ltd. Sponsored ADR Class A) TSLA Tesla, Inc.(Tesla, Inc.)",15,49.3500,742.24,,,美股帳戶202401.pdf
+10/01/24,11/01/24,09/01/24,00015940- 000,B,,2,234.2888,470.57,,"1,980.68",美股帳戶202401.pdf
+15/01/24,17/01/24,12/01/24,00023445- 000,B,VOO Vanguard S&P 500 ETF(Vanguard S&P 500 ETF),1,439.4500,441.44,,,美股帳戶202401.pdf
+15/01/24,15/01/24,15/01/24,1124,,代收股息CASH DIVIDEND:USD 0.381763/SH (TSM US) AS AT 20231215(BROKER PAID ON 12 Jan 2024) <登記股數: 7>,,,,2.67,,美股帳戶202401.pdf
+15/01/24,15/01/24,15/01/24,1125,,"紅利手續費: Taiwan Semiconductor Manufacturing Co.,(TSM)",,,0.01,,,美股帳戶202401.pdf
+15/01/24,15/01/24,15/01/24,326,,存入利息-2024/01/12,,,,1.92,"1,543.82",美股帳戶202401.pdf
+17/01/24,18/01/24,16/01/24,00027926- 000,B,"TSLA Tesla, Inc.(Tesla, Inc.) 代收股息CASH DIVIDEND:USD",3,223.1600,671.47,,872.35,美股帳戶202401.pdf
+18/01/24,18/01/24,18/01/24,881,, 0.215841/SH (QQQ US) AS AT 20231228(BROKER PAID ON 17 Jan 2024) <登記股數: 2> 紅利手續費: Invesco QQQ Trust Series,,,,0.43,,美股帳戶202401.pdf
+18/01/24,18/01/24,18/01/24,882,, I(QQQ),,,0.01,,,美股帳戶202401.pdf
+18/01/24,18/01/24,18/01/24,883,,扣美國稅 Invesco QQQ Trust Series I(QQQ),,,0.13,,872.64,美股帳戶202401.pdf
+24/01/24,25/01/24,23/01/24,00043524- 000,B,"LI Li Auto, Inc. Sponsored ADR Class A(Li Auto, Inc. Sponsored ADR Class A)",1,29.7500,31.74,,840.90,美股帳戶202401.pdf
+31/01/24,01/02/24,30/01/24,00058794- 000,B,"TSLA Tesla, Inc.(Tesla, Inc.)",2,193.8000,389.59,,,美股帳戶202401.pdf
+31/01/24,01/02/24,30/01/24,00058793- 000,S,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A) 結餘(2024年01月31日) Balance C/F(31-JAN-2024),7,126.0000,879.99,,"1,331.30",美股帳戶202401.pdf
+05/02/24,06/02/24,02/02/24,00068364- 000,B,"TSLA Tesla, Inc.(Tesla, Inc.)",2,187.6900,377.37,,,美股帳戶202402.pdf
+05/02/24,06/02/24,02/02/24,00068365- 000,B,GOOGL Alphabet Inc. Class A(Alphabet Inc. Class A) 存入資金-2024/02/03-2024/02/03,4,139.9556,561.81,,,美股帳戶202402.pdf
+05/02/24,05/02/24,05/02/24,72,, 01:02:15,,,"1,280.00",,"1,672.12",美股帳戶202402.pdf
+08/02/24,08/02/24,08/02/24,1515,,存入利息-2024/02/08,,,,1.40,"1,673.52",美股帳戶202402.pdf
+13/02/24,14/02/24,12/02/24,00083752- 000,B,VOO Vanguard S&P 500 ETF(Vanguard S&P 500 ETF),1,460.5900,462.58,,"1,210.94",美股帳戶202402.pdf
+19/02/24,21/02/24,16/02/24,00094616- 000,B,GOOGL Alphabet Inc. Class A(Alphabet Inc. Class A),3,141.3250,425.97,,,美股帳戶202402.pdf
+19/02/24,19/02/24,19/02/24,1488,,代收股息CASH DIVIDEND:USD 0.24/SH (AAPL US) AS AT 20240212(BROKER PAID ON 16 Feb 2024) <登記股數: 34>,,,,8.16,,美股帳戶202402.pdf
+19/02/24,19/02/24,19/02/24,1489,,紅利手續費: Apple Inc.(AAPL),,,0.02,,,美股帳戶202402.pdf
+19/02/24,19/02/24,19/02/24,1490,,扣美國稅 Apple Inc.(AAPL),,,2.45,,790.66,美股帳戶202402.pdf
+27/02/24,28/02/24,26/02/24,00114392- 000,B,"LI Li Auto, Inc. Sponsored ADR Class A(Li Auto, Inc. Sponsored ADR Class A) 結餘(2024年02月29日) Balance C/F(29-FEB-2024)",7,40.5900,286.12,,504.54,美股帳戶202402.pdf
+06/03/24,07/03/24,05/03/24,00137303- 000,B,QQQ Invesco QQQ Trust Series I(Invesco QQQ Trust Series I),1,435.2400,437.23,,67.31,美股帳戶202403.pdf
+07/03/24,08/03/24,06/03/24,00141452- 000,B,FUTU Futu Holdings Ltd. Sponsored ADR Class A(Futu Holdings Ltd. Sponsored ADR Class A),1,57.0800,59.07,,,美股帳戶202403.pdf
+07/03/24,07/03/24,07/03/24,37,,存入資金-2024/03/06-2024/03/06 22:23:29,,,600.00,,608.24,美股帳戶202403.pdf
+08/03/24,08/03/24,08/03/24,1792,,存入利息-2024/03/08,,,,0.97,609.21,美股帳戶202403.pdf
+12/03/24,13/03/24,11/03/24,00152767- 000,S,"TSM Taiwan Semiconductor Manufacturing Co.,(Taiwan Semiconductor Manufacturing Co.,)",2,140.7705,561.07,,,美股帳戶202403.pdf
+12/03/24,13/03/24,11/03/24,00152769- 000,S,FUTU Futu Holdings Ltd. Sponsored ADR Class A(Futu Holdings Ltd. Sponsored ADR Class A),6,60.0000,357.99,,"1,528.27",美股帳戶202403.pdf
+15/03/24,18/03/24,14/03/24,00168189- 000,S,FUTU Futu Holdings Ltd. Sponsored ADR Class A(Futu Holdings Ltd. Sponsored ADR Class A),10,58.7210,585.20,,"2,113.47",美股帳戶202403.pdf
+22/03/24,25/03/24,21/03/24,00185348- 000,B,AAPL Apple Inc.(Apple Inc.),2,171.1600,344.31,,,美股帳戶202403.pdf
+22/03/24,25/03/24,21/03/24,00185349- 000,B,"TSLA Tesla, Inc.(Tesla, Inc.) 結餘(2024年03月28日) Balance C/F(28-MAR-2024)",2,172.3790,346.75,,"1,422.41",美股帳戶202403.pdf
+01/04/24,01/04/24,29/03/24,2333,,代收股息CASH DIVIDEND:USD 1.542898/SH (VOO US) AS AT 20240325(BROKER PAID ON 29 Mar 2024) <登記股數: 3>,,,,4.62,,美股帳戶202404.pdf
+01/04/24,01/04/24,29/03/24,2334,,紅利手續費: Vanguard S&P 500 ETF(VOO),,,0.01,,,美股帳戶202404.pdf
+01/04/24,01/04/24,29/03/24,2335,,扣美國稅 Vanguard S&P 500 ETF(VOO),,,1.39,,"1,425.63",美股帳戶202404.pdf
+05/04/24,08/04/24,04/04/24,00212003- 000,B,"TSLA Tesla, Inc.(Tesla, Inc.) TSLA Tesla, Inc.(Tesla, Inc.)",2,175.3000,352.59,,"1,073.04",美股帳戶202404.pdf
+08/04/24,09/04/24,05/04/24,00216428- 000,B,,3,165.9895,499.96,,573.08,美股帳戶202404.pdf
+11/04/24,11/04/24,11/04/24,1370,,存入利息-2024/04/11,,,,0.96,574.04,美股帳戶202404.pdf
+15/04/24,15/04/24,15/04/24,1180,,代收股息CASH DIVIDEND:USD 0.431022/SH (TSM US) AS AT 20240319(BROKER PAID ON 12 Apr 2024) <登記股數: 3>,,,,1.29,,美股帳戶202404.pdf
+15/04/24,15/04/24,15/04/24,1181,,"紅利手續費: Taiwan Semiconductor Manufacturing Co.,(TSM)",,,0.01,,575.32,美股帳戶202404.pdf
+17/04/24,18/04/24,16/04/24,00240933- 000,B,VOO Vanguard S&P 500 ETF(Vanguard S&P 500 ETF),1,463.9400,465.93,,109.39,美股帳戶202404.pdf
+19/04/24,22/04/24,18/04/24,00246988- 000,B,JNJ Johnson & Johnson(Johnson & Johnson) SOFI SoFi Technologies Inc(SoFi,4,144.6100,580.43,,,美股帳戶202404.pdf
+19/04/24,22/04/24,18/04/24,00246989- 000,B, Technologies Inc),20,7.2400,146.79,,,美股帳戶202404.pdf
+19/04/24,19/04/24,19/04/24,67,,存入資金-2024/04/19-2024/04/19 01:26:45,,,"1,200.00",,582.17,美股帳戶202404.pdf
+23/04/24,24/04/24,22/04/24,00254325- 000,B,JNJ Johnson & Johnson(Johnson & Johnson),2,147.5997,297.19,,,美股帳戶202404.pdf
+23/04/24,24/04/24,22/04/24,00254326- 000,B,"SOFI SoFi Technologies Inc(SoFi Technologies Inc) TSLA Tesla, Inc.(Tesla, Inc.)",20,7.1998,145.99,,,美股帳戶202404.pdf
+23/04/24,24/04/24,22/04/24,00254327- 000,S, 結餘(2024年04月30日) Balance C/F(30-APR-2024),4,139.3100,555.23,,694.22,美股帳戶202404.pdf
+02/05/24,02/05/24,02/05/24,1318,,代收股息CASH DIVIDEND:USD 0.573449/SH (QQQ US) AS AT 20240319(BROKER PAID ON 1 May 2024) <登記股數: 3>,,,,1.72,,美股帳戶202405.pdf
+02/05/24,02/05/24,02/05/24,1319,,紅利手續費: Invesco QQQ Trust Series I(QQQ),,,0.01,,,美股帳戶202405.pdf
+02/05/24,02/05/24,02/05/24,1320,,扣美國稅 Invesco QQQ Trust Series I(QQQ) JNJ Johnson & Johnson(Johnson &,,,0.52,,695.41,美股帳戶202405.pdf
+06/05/24,07/05/24,03/05/24,00289283- 000,B, Johnson),2,148.8795,299.75,,,美股帳戶202405.pdf
+06/05/24,07/05/24,03/05/24,00289284- 000,B,QQQ Invesco QQQ Trust Series I(Invesco QQQ Trust Series I),1,435.3000,437.29,,,美股帳戶202405.pdf
+06/05/24,07/05/24,03/05/24,00289286- 000,B,SOFI SoFi Technologies Inc(SoFi Technologies Inc),50,6.9300,348.49,,,美股帳戶202405.pdf
+06/05/24,07/05/24,03/05/24,00289285- 000,S,AAPL Apple Inc.(Apple Inc.) GOOGL Alphabet Inc. Class A(Alphabet,2,185.3402,368.67,,,美股帳戶202405.pdf
+06/05/24,07/05/24,03/05/24,00289287- 000,S, Inc. Class A),2,166.2403,330.47,,,美股帳戶202405.pdf
+06/05/24,06/05/24,06/05/24,358,,存入利息-2024/05/03,,,,0.58,309.60,美股帳戶202405.pdf
+20/05/24,21/05/24,17/05/24,00329451- 000,B,NU Nu Holdings Ltd. Class A(Nu Holdings Ltd. Class A),25,11.6400,292.99,,,美股帳戶202405.pdf
+20/05/24,20/05/24,20/05/24,2369,,代收股息CASH DIVIDEND:USD 0.250001/SH (AAPL US) AS AT 20240513(BROKER PAID ON 17 May 2024) <登記股數: 34>,,,,8.50,,美股帳戶202405.pdf
+20/05/24,20/05/24,20/05/24,2370,,紅利手續費: Apple Inc.(AAPL),,,0.02,,,美股帳戶202405.pdf
+20/05/24,20/05/24,20/05/24,2371,,扣美國稅 Apple Inc.(AAPL),,,2.55,,,美股帳戶202405.pdf
+20/05/24,20/05/24,20/05/24,72,,存入資金-2024/05/18-2024/05/18 03:00:41,,,"1,000.00",,"1,022.54",美股帳戶202405.pdf
+29/05/24,29/05/24,28/05/24,00364128- 000,B,SOFI SoFi Technologies Inc(SoFi Technologies Inc) TSM Taiwan Semiconductor,40,7.0000,281.99,,,美股帳戶202405.pdf
+29/05/24,29/05/24,28/05/24,00364127- 000,S," Manufacturing Co.,(Taiwan Semiconductor Manufacturing Co.,) 結餘(2024年05月31日) Balance C/F(31-MAY-2024)",3,158.7005,474.08,,"1,214.63",美股帳戶202405.pdf
+06/06/24,06/06/24,06/06/24,1435,,代收股息CASH DIVIDEND:USD 1.239982/SH (JNJ US) AS AT 20240521(BROKER PAID ON 5 Jun 2024) <登記股數: 8>,,,,9.91,,美股帳戶202406.pdf
+06/06/24,06/06/24,06/06/24,1436,,紅利手續費: Johnson & Johnson(JNJ),,,0.02,,,美股帳戶202406.pdf
+06/06/24,06/06/24,06/06/24,1437,,扣美國稅 Johnson & Johnson(JNJ),,,2.98,,"1,221.54",美股帳戶202406.pdf
+11/06/24,11/06/24,11/06/24,2122,,存入利息-2024/06/11,,,,0.51,"1,222.05",美股帳戶202406.pdf
+13/06/24,13/06/24,12/06/24,00404358- 000,B,NU Nu Holdings Ltd. Class A(Nu Holdings Ltd. Class A),20,11.7100,236.19,,985.86,美股帳戶202406.pdf
+19/06/24,19/06/24,19/06/24,1507,,代收股息CASH DIVIDEND:USD 0.199999/SH (GOOGL US) AS AT 20240610(BROKER PAID ON 18 Jun 2024) <登記股數: 18>,,,,3.59,,美股帳戶202406.pdf
+19/06/24,19/06/24,19/06/24,1508,,紅利手續費: Alphabet Inc. Class A(GOOGL) 扣美國稅 Alphabet Inc. Class,,,0.01,,,美股帳戶202406.pdf
+19/06/24,19/06/24,19/06/24,1509,, A(GOOGL) MA Mastercard Incorporated Class,,,1.08,,988.36,美股帳戶202406.pdf
+24/06/24,24/06/24,21/06/24,00429197- 000,B, A(Mastercard Incorporated Class A),1,453.2500,455.24,,533.12,美股帳戶202406.pdf
+26/06/24,26/06/24,25/06/24,00436066- 000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A) SOFI SoFi Technologies Inc(SoFi,2,140.9700,283.93,,,美股帳戶202406.pdf
+26/06/24,26/06/24,25/06/24,00436067- 000,B, Technologies Inc) 結餘(2024年06月28日) Balance C/F(28-JUN-2024),35,6.4500,227.74,,21.45,美股帳戶202406.pdf
+04/07/24,04/07/24,04/07/24,3407,,代收股息CASH DIVIDEND:USD 1.783503/SH (VOO US) AS AT 20240628(BROKER PAID ON 3 Jul 2024) <登記股數: 4>,,,,7.13,,美股帳戶202407.pdf
+04/07/24,04/07/24,04/07/24,3408,,紅利手續費: Vanguard S&P 500 ETF(VOO),,,0.02,,,美股帳戶202407.pdf
+04/07/24,04/07/24,04/07/24,3409,,扣美國稅 Vanguard S&P 500 ETF(VOO),,,2.14,,26.42,美股帳戶202407.pdf
+05/07/24,05/07/24,05/07/24,1216,,存入利息-2024/07/05,,,,0.73,27.15,美股帳戶202407.pdf
+11/07/24,11/07/24,10/07/24,00470919- 000,S,"TSLA Tesla, Inc.(Tesla, Inc.)",5,264.9100,"1,322.51",,"1,349.66",美股帳戶202407.pdf
+12/07/24,12/07/24,11/07/24,00474749- 000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A),4,139.3300,559.31,,,美股帳戶202407.pdf
+12/07/24,12/07/24,11/07/24,00474750- 000,S,AAPL Apple Inc.(Apple Inc.),4,227.7805,909.09,,,美股帳戶202407.pdf
+12/07/24,12/07/24,11/07/24,00474752- 000,S,"TSLA Tesla, Inc.(Tesla, Inc.) NU Nu Holdings Ltd. Class A(Nu",2,243.1600,484.30,,"2,183.74",美股帳戶202407.pdf
+22/07/24,22/07/24,19/07/24,00497480- 000,B, Holdings Ltd. Class A),20,13.4098,270.19,,,美股帳戶202407.pdf
+22/07/24,22/07/24,19/07/24,00497482- 000,S,"TSLA Tesla, Inc.(Tesla, Inc.)",4,238.4500,951.77,,"2,865.32",美股帳戶202407.pdf
+29/07/24,29/07/24,26/07/24,00514191- 000,B,NU Nu Holdings Ltd. Class A(Nu Holdings Ltd. Class A),15,12.4998,189.49,,,美股帳戶202407.pdf
+29/07/24,29/07/24,26/07/24,00514192- 000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A),3,130.4600,393.37,,,美股帳戶202407.pdf
+29/07/24,29/07/24,26/07/24,00514194- 000,B,SOFI SoFi Technologies Inc(SoFi Technologies Inc),35,7.4300,262.04,,,美股帳戶202407.pdf
+29/07/24,29/07/24,26/07/24,00514195- 000,B,"TSLA Tesla, Inc.(Tesla, Inc.)",2,219.2795,440.55,,,美股帳戶202407.pdf
+29/07/24,29/07/24,26/07/24,00514196- 000,B,GOOGL Alphabet Inc. Class A(Alphabet Inc. Class A) 結餘(2024年07月31日) Balance C/F(31-JUL-2024),5,166.5495,834.74,,745.13,美股帳戶202407.pdf
+02/08/24,02/08/24,02/08/24,1982,,代收股息CASH DIVIDEND:USD 0.761497481040825/SH (QQQ US) AS AT 20240624(BROKER PAID ON 1 Aug 2024) <登記股數: 4>,,,,3.04,,美股帳戶202408.pdf
+02/08/24,02/08/24,02/08/24,1983,,紅利手續費: Invesco QQQ Trust Series I(QQQ),,,0.01,,,美股帳戶202408.pdf
+02/08/24,02/08/24,02/08/24,1984,,扣美國稅 Invesco QQQ Trust Series I(QQQ),,,0.92,,747.24,美股帳戶202408.pdf
+07/08/24,07/08/24,06/08/24,00542978- 000,B,VOO Vanguard S&P 500 ETF(Vanguard S&P 500 ETF) 存入利息-2024/08/08,1,485.0190,487.01,,260.23,美股帳戶202408.pdf
+08/08/24,08/08/24,08/08/24,2545,, 代收股息CASH DIVIDEND:USD,,,,1.08,261.31,美股帳戶202408.pdf
+13/08/24,13/08/24,13/08/24,947,, 0.660133/SH (MA US) AS AT 20240709(BROKER PAID ON 12 Aug 2024) <登記股數: 1> 紅利手續費: Mastercard Incorporated,,,,0.66,,美股帳戶202408.pdf
+13/08/24,13/08/24,13/08/24,948,, Class A(MA),,,0.01,,,美股帳戶202408.pdf
+13/08/24,13/08/24,13/08/24,949,,扣美國稅 Mastercard Incorporated Class A(MA),,,0.20,,261.76,美股帳戶202408.pdf
+19/08/24,19/08/24,16/08/24,00569446- 000,B,"LI Li Auto, Inc. Sponsored ADR Class A(Li Auto, Inc. Sponsored ADR Class A)",20,20.4200,410.39,,,美股帳戶202408.pdf
+19/08/24,19/08/24,16/08/24,00569448- 000,B,MA Mastercard Incorporated Class A(Mastercard Incorporated Class A),1,466.8900,468.88,,,美股帳戶202408.pdf
+19/08/24,19/08/24,16/08/24,00569450- 000,S,AAPL Apple Inc.(Apple Inc.),2,224.0505,446.08,,,美股帳戶202408.pdf
+19/08/24,19/08/24,16/08/24,00569451- 000,S,AAPL Apple Inc.(Apple Inc.) 代收股息CASH DIVIDEND:USD 0.25/SH,2,224.2000,446.38,,,美股帳戶202408.pdf
+19/08/24,19/08/24,19/08/24,1961,, (AAPL US) AS AT 20240812(BROKER PAID ON 16 Aug 2024) <登記股數: 30>,,,,7.50,,美股帳戶202408.pdf
+19/08/24,19/08/24,19/08/24,1962,,紅利手續費: Apple Inc.(AAPL),,,0.02,,,美股帳戶202408.pdf
+19/08/24,19/08/24,19/08/24,1963,,扣美國稅 Apple Inc.(AAPL) 結餘(2024年08月30日) Balance C/F(30-AUG-2024),,,2.25,,280.18,美股帳戶202408.pdf
+04/09/24,04/09/24,03/09/24,00606660- 000,S,AAPL Apple Inc.(Apple Inc.),4,223.4600,891.81,,"1,171.99",美股帳戶202409.pdf
+05/09/24,05/09/24,05/09/24,2198,,存入利息-2024/09/05,,,,0.28,"1,172.27",美股帳戶202409.pdf
+12/09/24,12/09/24,12/09/24,1332,,代收股息CASH DIVIDEND:USD 1.240053/SH (JNJ US) AS AT 20240827(BROKER PAID ON 12 Sep 2024) <登記股數: 8>,,,,9.92,,美股帳戶202409.pdf
+12/09/24,12/09/24,12/09/24,1333,,紅利手續費: Johnson & Johnson(JNJ),,,0.02,,,美股帳戶202409.pdf
+12/09/24,12/09/24,12/09/24,1334,,扣美國稅 Johnson & Johnson(JNJ) 代收股息CASH DIVIDEND:USD,,,2.98,,"1,179.19",美股帳戶202409.pdf
+18/09/24,18/09/24,18/09/24,1265,, 0.199999/SH (GOOGL US) AS AT 20240909(BROKER PAID ON 17 Sep 2024) <登記股數: 23>,,,,4.59,,美股帳戶202409.pdf
+18/09/24,18/09/24,18/09/24,1266,,紅利手續費: Alphabet Inc. Class A(GOOGL) 扣美國稅 Alphabet Inc. Class,,,0.01,,,美股帳戶202409.pdf
+18/09/24,18/09/24,18/09/24,1267,, A(GOOGL),,,1.38,,"1,182.39",美股帳戶202409.pdf
+19/09/24,19/09/24,18/09/24,00637921- 000,B,GOOGL Alphabet Inc. Class A(Alphabet Inc. Class A),4,160.0100,642.03,,,美股帳戶202409.pdf
+19/09/24,19/09/24,18/09/24,00637919- 000,S,AAPL Apple Inc.(Apple Inc.),6,220.3005,"1,319.76",,"1,860.12",美股帳戶202409.pdf
+20/09/24,20/09/24,19/09/24,00642276- 000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A),4,100.1400,402.55,,"1,457.57",美股帳戶202409.pdf
+24/09/24,24/09/24,23/09/24,00649924- 000,S,AAPL Apple Inc.(Apple Inc.),3,226.7800,678.32,,"2,135.89",美股帳戶202409.pdf
+30/09/24,30/09/24,27/09/24,00675250- 000,B,NU Nu Holdings Ltd. Class A(Nu Holdings Ltd. Class A) VOO Vanguard S&P 500 ETF(Vanguard,20,13.9598,281.19,,,美股帳戶202409.pdf
+30/09/24,30/09/24,27/09/24,00675251- 000,B, S&P 500 ETF),1,525.8300,527.82,,,美股帳戶202409.pdf
+30/09/24,30/09/24,27/09/24,00675253- 000,S,AAPL Apple Inc.(Apple Inc.),1,228.2402,682.71,,,美股帳戶202409.pdf
+30/09/24,30/09/24,27/09/24,00675254- 000,S,"TSLA Tesla, Inc.(Tesla, Inc.) 結餘(2024年09月30日) Balance C/F(30-SEP-2024)",3,259.8203,777.43,,"2,787.02",美股帳戶202409.pdf
+03/10/24,03/10/24,03/10/24,3304,,代收股息CASH DIVIDEND:USD 1.638599/SH (VOO US) AS AT 20240927(BROKER PAID ON 2 Oct 2024) <登記股數: 5>,,,,8.19,,美股帳戶202410.pdf
+03/10/24,03/10/24,03/10/24,3305,,紅利手續費: Vanguard S&P 500 ETF(VOO) 扣美國稅 Vanguard S&P 500 ETF(VOO),,,0.02,,,美股帳戶202410.pdf
+03/10/24,03/10/24,03/10/24,3306,, GOOGL Alphabet Inc. Class A(Alphabet,,,2.46,,"2,792.73",美股帳戶202410.pdf
+09/10/24,09/10/24,08/10/24,00740432- 000,B, Inc. Class A),3,164.1798,494.53,,"2,298.20",美股帳戶202410.pdf
+10/10/24,10/10/24,09/10/24,00748760- 000,B,NU Nu Holdings Ltd. Class A(Nu Holdings Ltd. Class A),20,13.3398,268.79,,,美股帳戶202410.pdf
+10/10/24,10/10/24,09/10/24,00748762- 000,B,QQQ Invesco QQQ Trust Series I(Invesco QQQ Trust Series I),1,493.3400,495.33,,,美股帳戶202410.pdf
+10/10/24,10/10/24,10/10/24,411,,存入利息-2024/10/09,,,,1.03,"1,535.11",美股帳戶202410.pdf
+25/10/24,25/10/24,24/10/24,00809955- 000,S,SOFI SoFi Technologies Inc(SoFi Technologies Inc) JNJ Johnson & Johnson(Johnson &,40,10.9502,435.99,,"1,971.10",美股帳戶202410.pdf
+28/10/24,28/10/24,25/10/24,00815634- 000,B, Johnson),2,160.7900,323.57,,,美股帳戶202410.pdf
+28/10/24,28/10/24,25/10/24,00815636- 000,B,LULU lululemon athletica inc.(lululemon athletica inc.),2,304.1855,610.36,,"1,037.17",美股帳戶202410.pdf
+30/10/24,30/10/24,29/10/24,00825369- 000,B,"PYPL PayPal Holdings, Inc.(PayPal Holdings, Inc.) 結餘(2024年10月31日) Balance C/F(31-OCT-2024)",8,80.7790,648.22,,388.95,美股帳戶202410.pdf
+04/11/24,04/11/24,04/11/24,1876,,代收股息CASH DIVIDEND:USD 0.676859/SH (QQQ US) AS AT 20240923(BROKER PAID ON 1 Nov 2024) <登記股數: 4>,,,,2.70,,美股帳戶202411.pdf
+04/11/24,04/11/24,04/11/24,1877,,紅利手續費: Invesco QQQ Trust Series I(QQQ) 扣美國稅 Invesco QQQ Trust Series,,,0.01,,,美股帳戶202411.pdf
+04/11/24,04/11/24,04/11/24,1878,, I(QQQ) 存入利息-2024/11/05,,,0.81,,390.83,美股帳戶202411.pdf
+05/11/24,05/11/24,05/11/24,220,,,,,,1.51,392.34,美股帳戶202411.pdf
+11/11/24,12/11/24,08/11/24,00875522- 000,B,"PYPL PayPal Holdings, Inc.(PayPal Holdings, Inc.)",6,82.8998,499.39,,,美股帳戶202411.pdf
+11/11/24,12/11/24,08/11/24,00875524- 000,S,"TSLA Tesla, Inc.(Tesla, Inc.)",4,321.7425,"1,284.93",,"1,177.88",美股帳戶202411.pdf
+12/11/24,12/11/24,11/11/24,00882367- 000,B,"PYPL PayPal Holdings, Inc.(PayPal Holdings, Inc.) 代收股息CASH DIVIDEND:USD",10,86.4295,866.29,,,美股帳戶202411.pdf
+12/11/24,12/11/24,12/11/24,1610,, 0.659859/SH (MA US) AS AT 20241009(BROKER PAID ON 11 Nov 2024) <登記股數: 2> 紅利手續費: Mastercard Incorporated,,,,1.32,,美股帳戶202411.pdf
+12/11/24,12/11/24,12/11/24,1611,, Class A(MA) 扣美國稅 Mastercard Incorporated,,,0.01,,,美股帳戶202411.pdf
+12/11/24,12/11/24,12/11/24,1612,, Class A(MA),,,0.40,,312.50,美股帳戶202411.pdf
+18/11/24,18/11/24,18/11/24,2130,,代收股息CASH DIVIDEND:USD 0.24999960551558/SH (AAPL US) AS AT 20241111(BROKER PAID ON 15 Nov 2024) <登記股數: 10>,,,,2.49,,美股帳戶202411.pdf
+18/11/24,18/11/24,18/11/24,2131,,紅利手續費: Apple Inc.(AAPL),,,0.01,,,美股帳戶202411.pdf
+18/11/24,18/11/24,18/11/24,2132,,扣美國稅 Apple Inc.(AAPL),,,0.75,,314.23,美股帳戶202411.pdf
+27/11/24,27/11/24,27/11/24,85,,存入資金-2024/11/27-2024/11/27 01:54:56 結餘(2024年11月29日) Balance C/F(29-NOV-2024),,,"1,000.00",,"1,314.23",美股帳戶202411.pdf
+03/12/24,03/12/24,02/12/24,00954793- 000,B,"PYPL PayPal Holdings, Inc.(PayPal Holdings, Inc.) GOOGL Alphabet Inc. Class A(Alphabet",3,86.1800,260.53,,,美股帳戶202412.pdf
+03/12/24,03/12/24,02/12/24,00954795- 000,B, Inc. Class A),3,171.6898,517.06,,536.64,美股帳戶202412.pdf
+06/12/24,06/12/24,06/12/24,2177,,存入利息-2024/12/06,,,,0.34,536.98,美股帳戶202412.pdf
+09/12/24,09/12/24,06/12/24,00973027- 000,B,NU Nu Holdings Ltd. Class A(Nu Holdings Ltd. Class A),30,11.9798,361.38,,175.60,美股帳戶202412.pdf
+10/12/24,10/12/24,09/12/24,00979241- 000,S,AAPL Apple Inc.(Apple Inc.) SOFI SoFi Technologies Inc(SoFi,1,246.9305,"1,232.65",,,美股帳戶202412.pdf
+10/12/24,10/12/24,09/12/24,00979243- 000,S, Technologies Inc) 代收股息CASH DIVIDEND:USD,80,15.7702,"1,259.58",,"2,667.83",美股帳戶202412.pdf
+12/12/24,12/12/24,12/12/24,2079,, 1.239995/SH (JNJ US) AS AT 20241126(BROKER PAID ON 11 Dec 2024) <登記股數: 10> 紅利手續費: Johnson & Johnson(JNJ),,,12.39,,,美股帳戶202412.pdf
+12/12/24,12/12/24,12/12/24,2080,, 扣美國稅 Johnson & Johnson(JNJ),,,0.03,,,美股帳戶202412.pdf
+12/12/24,12/12/24,12/12/24,2081,,,,,3.72,,"2,676.47",美股帳戶202412.pdf
+18/12/24,18/12/24,17/12/24,01011273- 000,S,"TSLA Tesla, Inc.(Tesla, Inc.)",1,470.1615,468.14,,,美股帳戶202412.pdf
+18/12/24,18/12/24,18/12/24,2712,,代收股息CASH DIVIDEND:USD 0.200001/SH (GOOGL US) AS AT 20241209(BROKER PAID ON 17 Dec 2024) <登記股數: 33>,,,,6.60,,美股帳戶202412.pdf
+18/12/24,18/12/24,18/12/24,2713,,紅利手續費: Alphabet Inc. Class A(GOOGL),,,0.02,,,美股帳戶202412.pdf
+18/12/24,18/12/24,18/12/24,2714,,扣美國稅 Alphabet Inc. Class A(GOOGL),,,1.98,,"3,149.21",美股帳戶202412.pdf
+20/12/24,20/12/24,19/12/24,01021593- 000,B,QQQ Invesco QQQ Trust Series I(Invesco QQQ Trust Series I) 代收股息CASH DIVIDEND:USD 1.7385/SH,1,517.4500,519.44,,"2,629.77",美股帳戶202412.pdf
+30/12/24,30/12/24,30/12/24,3002,, (VOO US) AS AT 20241223(BROKER PAID ON 27 Dec 2024) <登記股數: 6>,,,10.43,,,美股帳戶202412.pdf
+30/12/24,30/12/24,30/12/24,3003,,紅利手續費: Vanguard S&P 500 ETF(VOO) 扣美國稅 Vanguard S&P 500 ETF(VOO),,,0.03,,,美股帳戶202412.pdf
+30/12/24,30/12/24,30/12/24,3004,, 結餘(2024年12月31日) Balance C/F(31-DEC-2024),,,3.13,,"2,637.04",美股帳戶202412.pdf
+03/01/25,03/01/25,03/01/25,2581,,代收股息CASH DIVIDEND:USD 0.834659/SH (QQQ US) AS AT 20241223(BROKER PAID ON 3 Jan 2025) <登記股數: 6>,,,,5.00,,美股帳戶202501.pdf
+03/01/25,03/01/25,03/01/25,2582,,紅利手續費: Invesco QQQ Trust Series I(QQQ),,,0.01,,,美股帳戶202501.pdf
+03/01/25,03/01/25,03/01/25,2583,,扣美國稅 Invesco QQQ Trust Series I(QQQ) VOO Vanguard S&P 500 ETF(Vanguard,,,1.50,,"2,640.53",美股帳戶202501.pdf
+06/01/25,06/01/25,03/01/25,00011316- 000,B, S&P 500 ETF),1,543.4100,545.40,,"2,095.13",美股帳戶202501.pdf
+07/01/25,07/01/25,07/01/25,6290,,存入利息-2025/01/07,,,,1.71,"2,096.84",美股帳戶202501.pdf
+13/01/25,13/01/25,10/01/25,00034933- 000,B,"AMD Advanced Micro Devices, Inc.(Advanced Micro Devices, Inc.)",5,116.3897,583.94,,,美股帳戶202501.pdf
+13/01/25,13/01/25,13/01/25,1553,,CorpAction ADR FEE PDD ADR FEE 0.02 /SH AS AT 20241227 結餘(2025年01月31日) Balance C/F(31-JAN-2025),,,0.66,,"1,512.24",美股帳戶202501.pdf
+07/02/25,07/02/25,07/02/25,2771,,存入利息-2025/02/07,,,,1.55,"1,513.79",美股帳戶202502.pdf
+11/02/25,11/02/25,11/02/25,2396,,代收股息CASH DIVIDEND:USD 0.759889/SH (MA US) AS AT 20250109(BROKER PAID ON 10 Feb 2025) <登記股數: 2>,,,,1.51,,美股帳戶202502.pdf
+11/02/25,11/02/25,11/02/25,2397,,紅利手續費: Mastercard Incorporated Class A(MA) 扣美國稅 Mastercard Incorporated,,,0.01,,,美股帳戶202502.pdf
+11/02/25,11/02/25,11/02/25,2398,, Class A(MA) CorpAction ADR FEE LI ADR FEE,,,0.46,,"1,514.83",美股帳戶202502.pdf
+12/02/25,12/02/25,12/02/25,2353,, 0.02/SH AS AT 20250103,,,0.56,,"1,514.27",美股帳戶202502.pdf
+14/02/25,14/02/25,13/02/25,00171421- 000,S,AAPL Apple Inc.(Apple Inc.),5,241.2900,"1,204.41",,"2,718.68",美股帳戶202502.pdf
+17/02/25,18/02/25,14/02/25,00181474- 000,B,"AMD Advanced Micro Devices, Inc.(Advanced Micro Devices, Inc.) 代收股息CASH DIVIDEND:USD 0.25/SH",5,112.8000,565.99,,,美股帳戶202502.pdf
+17/02/25,17/02/25,17/02/25,3055,, (AAPL US) AS AT 20250210(BROKER PAID ON 14 Feb 2025) <登記股數: 5>,,,,1.25,,美股帳戶202502.pdf
+17/02/25,17/02/25,17/02/25,3056,,紅利手續費: Apple Inc.(AAPL),,,0.01,,,美股帳戶202502.pdf
+17/02/25,17/02/25,17/02/25,3057,,扣美國稅 Apple Inc.(AAPL),,,0.38,,"2,153.55",美股帳戶202502.pdf
+27/02/25,27/02/25,26/02/25,00255129- 000,B,PDD PDD Holdings Inc. Sponsored ADR Class A(PDD Holdings Inc. Sponsored ADR Class A),3,121.3700,366.10,,,美股帳戶202502.pdf
+27/02/25,27/02/25,26/02/25,00255131- 000,B,QQQ Invesco QQQ Trust Series I(Invesco QQQ Trust Series I),1,518.4100,520.40,,,美股帳戶202502.pdf
+27/02/25,27/02/25,26/02/25,00255132- 000,B,"TSLA Tesla, Inc.(Tesla, Inc.) 結餘(2025年02月28日) Balance C/F(28-FEB-2025)",1,299.8200,301.81,,965.24,美股帳戶202502.pdf
+06/03/25,06/03/25,06/03/25,2316,,代收股息CASH DIVIDEND:USD 1.239992/SH (JNJ US) AS AT 20250218(BROKER PAID ON 5 Mar 2025) <登記股數: 10>,,,12.39,,,美股帳戶202503.pdf
+06/03/25,06/03/25,06/03/25,2317,,紅利手續費: Johnson & Johnson(JNJ),,,0.03,,,美股帳戶202503.pdf
+06/03/25,06/03/25,06/03/25,2318,,扣美國稅 Johnson & Johnson(JNJ),,,3.72,,,美股帳戶202503.pdf
+06/03/25,06/03/25,06/03/25,2750,,存入利息-2025/03/06,,,,1.31,975.19,美股帳戶202503.pdf
+13/03/25,13/03/25,12/03/25,00350245- 000,B,QQQ Invesco QQQ Trust Series I(Invesco QQQ Trust Series I) 代收股息CASH DIVIDEND:USD,1,478.4800,480.47,,494.72,美股帳戶202503.pdf
+19/03/25,19/03/25,19/03/25,2323,, 0.200002/SH (GOOGL US) AS AT 20250310(BROKER PAID ON 19 Mar 2025) <登記股數: 33> 紅利手續費: Alphabet Inc. Class,,,,6.60,,美股帳戶202503.pdf
+19/03/25,19/03/25,19/03/25,2324,, A(GOOGL),,,0.02,,,美股帳戶202503.pdf
+19/03/25,19/03/25,19/03/25,2325,,扣美國稅 Alphabet Inc. Class A(GOOGL) 結餘(2025年03月31日) Balance C/F(31-MAR-2025),,,1.98,,499.32,美股帳戶202503.pdf
+07/04/25,08/04/25,,0488303-000,B,VOO Vanguard S&P 500 ETF Vanguard S&P 500 ETF ***** To Be Continued *****,1,462.0000,-463.99,,,美股帳戶202504.pdf
+07/04/25,08/04/25,,0488305-000,B,"AMZN Amazon.com, Inc. Amazon.com, Inc.",3,174.0100,-524.02,,,美股帳戶202504.pdf
+07/04/25,08/04/25,,0488307-000,B,GOOGL Alphabet Inc. Class A Alphabet Inc. Class A,2,145.2100,-292.41,,,美股帳戶202504.pdf
+01/05/25,02/05/25,,214724-000,B,"AMZNAmazon.com, Inc. Amazon.com, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",2,190.2900,-382.57,,,美股帳戶202505.pdf
+08/05/25,09/05/25,,241775-000,B,"AMZNAmazon.com, Inc. Amazon.com, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",4,191.3000,-767.19,,,美股帳戶202505.pdf
+16/05/25,19/05/25,,286726-000,S,"TSLATesla, Inc. Tesla, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",6,346.3206,,"2,075.92",,美股帳戶202505.pdf
+19/05/25,20/05/25,,292617-000,S,MAMastercard Incorporated Class A Mastercard Incorporated Class A 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,2,587.8106,,"1,173.62",,美股帳戶202505.pdf
+30/05/25,02/06/25,,347019-000,B,"AMZNAmazon.com, Inc. Amazon.com, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",1,202.7400,-812.96,,,美股帳戶202506.pdf
+09/06/25,10/06/25,,386272-000,B,QQQInvesco QQQ Trust Series I Invesco QQQ Trust Series I 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,1,530.7695,-532.76,,,美股帳戶202506.pdf
+26/06/25,27/06/25,,479498-000,B," Amazon.com, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",2,215.6000,-433.19,,,美股帳戶202506.pdf
+26/06/25,27/06/25,,479506-000,B,GOOGLAlphabet Inc. Class A Alphabet Inc. Class A 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,3,172.3700,-519.10,,,美股帳戶202506.pdf
+23/07/25,24/07/25,,637273-000,S,SOFISoFi Technologies Inc SoFi Technologies Inc 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,20,21.4000,,426.00,,美股帳戶202507.pdf
+30/07/25,31/07/25,,680488-000,S,PDDPDD Holdings Inc. Sponsored ADR PDD Holdings Inc. Sponsored ADR 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,6,114.2400,,683.44,,美股帳戶202507.pdf
+30/07/25,31/07/25,,0680488-000,,S Holdings Inc. Sponsored ADR,,6,114.2400,,683.44,美股帳戶202507.pdf
+31/07/25,01/08/25,,689379-000,B,GRABGrab Holdings Ltd. (Singapore) C Grab Holdings Ltd. (Singapore) C 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,160,4.9400,-792.39,,,美股帳戶202508.pdf
+08/09/25,09/09/25,,913027-000,B,VOOVanguard S&P 500 ETF Vanguard S&P 500 ETF 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,1,595.8195,-597.81,,,美股帳戶202509.pdf
+11/09/25,12/09/25,,945401-000,S,LULUlululemon athletica inc. lululemon athletica inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,2,165.1300,,328.26,,美股帳戶202509.pdf
+11/09/25,12/09/25,,945436-000,B, Class A 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,3,341.6000,"-1,026.79",,,美股帳戶202509.pdf
+11/09/25,12/09/25,,945482-000,B,"AMZNAmazon.com, Inc. Amazon.com, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",2,230.9800,-463.95,,,美股帳戶202509.pdf
+19/09/25,22/09/25,,1013396-000,B,UNHUnitedHealth Group Incorporated UnitedHealth Group Incorporated 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee GOOGLAlphabet Inc. Class A,2,338.3800,-678.75,,,美股帳戶202509.pdf
+25/09/25,26/09/25,,1085454-000,S, Alphabet Inc. Class A 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,5,243.5400,,"1,215.70",,美股帳戶202509.pdf
+26/09/25,29/09/25,,1106117-000,S,"TSLATesla, Inc. Tesla, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",2,426.1500,,850.30,,美股帳戶202509.pdf
+26/09/25,29/09/25,,1106123-000,S,GOOGLAlphabet Inc. Class A Alphabet Inc. Class A 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,3,246.8200,,738.46,,美股帳戶202509.pdf
+26/09/25,29/09/25,,1106140-000,B, Incorporated UnitedHealth Group Incorporated 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,3,342.7500,"-1,030.24",,,美股帳戶202509.pdf
+26/09/25,29/09/25,,1106146-000,B,JNJJohnson & Johnson Johnson & Johnson 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,5,179.0890,-897.44,,,美股帳戶202509.pdf
+29/09/25,30/09/25,,1118688-000,B,"PYPLPayPal Holdings, Inc. PayPal Holdings, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",8,71.1298,-571.03,,,美股帳戶202509.pdf
+22/10/25,23/10/25,,1326064-000,B,UNHUnitedHealth Group Incorporated UnitedHealth Group Incorporated 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,2,359.8400,-721.67,,,美股帳戶202510.pdf
+22/10/25,23/10/25,,1326069-000,B,"AMZNAmazon.com, Inc. Amazon.com, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",3,217.3500,-654.04,,,美股帳戶202510.pdf
+05/11/25,06/11/25,,1416083-000,B,METAMeta Platforms Inc Class A Meta Platforms Inc Class A 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee,1,641.4170,-643.41,,,美股帳戶202511.pdf
+04/12/25,05/12/25,,1564807-000,B,"GRABGrab Holdings Ltd. (Singapore) C Grab Holdings Ltd. (Singapore) C 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee AMZNAmazon.com, Inc.",150,5.3400,-802.99,,,美股帳戶202512.pdf
+29/12/25,30/12/25,,1663721-000,B," Amazon.com, Inc. 經記佣金 Commission 證監會徵費 SEC Levy 交易活動費 FINRA 金融交易稅 Fin.Trans. Tax OTC清算費 OTC Clearing fee",3,231.1295,-695.38,,,美股帳戶202512.pdf
+05/01/26,,,,B,AMZN,3.00,233.55,-702.64,,,美股帳戶202601.pdf
+05/01/26,,,,S,JNJ,10.00,202.8,,"2,026.00",,美股帳戶202601.pdf
+05/01/26,,,,B,QQQ,1.00,618.91,-620.90,,,美股帳戶202601.pdf
+16/01/26,,,,B,META,2.00,623.39,"-1,248.77",,,美股帳戶202601.pdf

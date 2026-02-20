@@ -5,10 +5,16 @@ import api from '@/lib/api';
 import {
     Briefcase, TrendingUp, TrendingDown, DollarSign,
     BarChart3, ArrowUpRight, ArrowDownRight, Sparkles,
-    Building2,
+    Building2, Tag as TagIcon, Edit2, X, Check
 } from 'lucide-react';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency } from '@/context/CurrencyContext';
+
+interface Tag {
+    id: number;
+    name: string;
+    color: string;
+}
 
 interface Holding {
     account_id: number;
@@ -24,6 +30,7 @@ interface Holding {
     market_value?: number;
     unrealized_pl?: number;
     unrealized_pl_pct?: number;
+    tags?: Tag[];
 }
 
 interface PortfolioSummary {
@@ -40,12 +47,30 @@ interface AccountGroup {
 
 export default function HoldingsPage() {
     const [holdings, setHoldings] = useState<Holding[]>([]);
+    const [allTags, setAllTags] = useState<Tag[]>([]);
+    const [editingAssetId, setEditingAssetId] = useState<number | null>(null);
+    const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+
     const [loading, setLoading] = useState(true);
     const [totalInvested, setTotalInvested] = useState(0);
     const { t } = useI18n();
     const { format, convertFrom, formatNative, currency } = useCurrency();
 
     useEffect(() => {
+        fetchData();
+        fetchTags();
+    }, []);
+
+    const fetchTags = async () => {
+        try {
+            const res = await api.get('/tags/');
+            setAllTags(res.data);
+        } catch (error) {
+            console.error('Failed to fetch tags', error);
+        }
+    };
+
+    const fetchData = () => {
         api.get('/portfolio/summary')
             .then(async (res) => {
                 const data = res.data as PortfolioSummary;
@@ -81,7 +106,32 @@ export default function HoldingsPage() {
             })
             .catch(console.error)
             .finally(() => setLoading(false));
-    }, []);
+    };
+
+    const handleEditTags = (assetId: number, currentTags: Tag[] = []) => {
+        setEditingAssetId(assetId);
+        setSelectedTagIds(currentTags.map(t => t.id));
+    };
+
+    const handleSaveTags = async () => {
+        if (!editingAssetId) return;
+        try {
+            await api.put(`/assets/${editingAssetId}/tags`, selectedTagIds);
+            setEditingAssetId(null);
+            fetchData(); // Refresh to show new tags
+        } catch (error) {
+            console.error('Failed to save tags', error);
+            alert('Failed to save tags');
+        }
+    };
+
+    const toggleTagSelection = (tagId: number) => {
+        if (selectedTagIds.includes(tagId)) {
+            setSelectedTagIds(selectedTagIds.filter(id => id !== tagId));
+        } else {
+            setSelectedTagIds([...selectedTagIds, tagId]);
+        }
+    };
 
     // Global totals (in Selected Currency)
     const totalMarketValue = holdings.reduce((sum, h) => sum + convertFrom(h.market_value || 0, h.currency || 'USD'), 0);
@@ -248,8 +298,25 @@ export default function HoldingsPage() {
                                                                     <span className="text-[10px] font-black text-zinc-600">{h.symbol.slice(0, 2)}</span>
                                                                 </div>
                                                                 <div>
-                                                                    <p className="font-bold text-sm text-zinc-900">{h.symbol}</p>
+                                                                    <p className="font-bold text-sm text-zinc-900 flex items-center gap-2">
+                                                                        {h.symbol}
+                                                                        <button
+                                                                            onClick={() => handleEditTags(h.asset_id, h.tags)}
+                                                                            className="text-zinc-300 hover:text-indigo-500 transition-colors"
+                                                                        >
+                                                                            <Edit2 size={12} />
+                                                                        </button>
+                                                                    </p>
                                                                     <p className="text-[11px] text-zinc-400">{h.name}</p>
+                                                                    {h.tags && h.tags.length > 0 && (
+                                                                        <div className="flex flex-wrap gap-1 mt-1">
+                                                                            {h.tags.map(t => (
+                                                                                <span key={t.id} className="text-[10px] px-1.5 py-0.5 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200" style={{ borderColor: t.color + '40', backgroundColor: t.color + '10', color: t.color }}>
+                                                                                    {t.name}
+                                                                                </span>
+                                                                            ))}
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -332,6 +399,60 @@ export default function HoldingsPage() {
                     </div>
                     <h3 className="text-lg font-bold text-zinc-800">{t('holdings.no_holdings')}</h3>
                     <p className="text-zinc-500 mt-1 text-sm">{t('holdings.no_holdings_desc')}</p>
+                </div>
+            )}
+            {/* Tag Edit Modal */}
+            {editingAssetId && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                        <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
+                            <h3 className="font-bold text-lg text-zinc-900">Edit Tags</h3>
+                            <button onClick={() => setEditingAssetId(null)} className="text-zinc-400 hover:text-zinc-600">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <div className="p-6">
+                            <div className="space-y-4">
+                                <p className="text-sm text-zinc-500">Select tags for this asset:</p>
+                                <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto">
+                                    {allTags.map(tag => {
+                                        const isSelected = selectedTagIds.includes(tag.id);
+                                        return (
+                                            <button
+                                                key={tag.id}
+                                                onClick={() => toggleTagSelection(tag.id)}
+                                                className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-all flex items-center gap-2
+                                                    ${isSelected
+                                                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-sm'
+                                                        : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                                                    }`}
+                                            >
+                                                {isSelected && <Check size={12} />}
+                                                {tag.name}
+                                            </button>
+                                        );
+                                    })}
+                                    {allTags.length === 0 && (
+                                        <p className="text-sm text-zinc-400 italic w-full text-center">No tags available. Go to Settings to create tags.</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="px-6 py-4 bg-zinc-50 border-t border-zinc-100 flex justify-end gap-3">
+                            <button
+                                onClick={() => setEditingAssetId(null)}
+                                className="px-4 py-2 rounded-xl font-medium text-sm text-zinc-600 hover:bg-zinc-100 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleSaveTags}
+                                className="px-4 py-2 rounded-xl font-medium text-sm bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition-colors"
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

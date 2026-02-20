@@ -117,7 +117,7 @@ def calculate_holdings(session: Session, at_date: Optional[date] = None) -> list
             "current_price": round(current_price, 2),
             "market_value": round(market_value, 2),
             "market_value_usd": round(market_value_usd, 2),
-            "tags": asset.tags,  
+            "tags": [{"id": t.id, "name": t.name, "color": t.color} for t in asset.tags],
         })
 
     return result

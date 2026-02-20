@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Sparkles, Globe, Coins, History, RefreshCw } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Sparkles, Globe, Coins, Tag as TagIcon, Plus, X, RefreshCw } from 'lucide-react';
 import api from '@/lib/api';
 import { useI18n } from '@/context/I18nContext';
 import { useCurrency, Currency } from '@/context/CurrencyContext';
@@ -85,68 +85,128 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            {/* Data Management Card */}
-            <DataManagementCard />
+            {/* Tag Management Card */}
+            <TagManagementCard />
         </div>
     );
 }
 
-function DataManagementCard() {
+function TagManagementCard() {
     const { t } = useI18n();
-    const [startDate, setStartDate] = useState('2020-01-01');
-    const [rebuilding, setRebuilding] = useState(false);
-    const [result, setResult] = useState<string | null>(null);
+    const [tags, setTags] = useState<{ id: number; name: string; color: string }[]>([]);
+    const [newTag, setNewTag] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
-    const handleRebuild = async () => {
-        setRebuilding(true);
-        setResult(null);
+    useEffect(() => {
+        fetchTags();
+    }, []);
+
+    const fetchTags = async () => {
         try {
-            await api.post(`/analytics/rebuild-history?start_date=${startDate}`);
-            setResult('✅ History rebuilt successfully!');
-        } catch (err: any) {
-            setResult(`❌ Error: ${err.message}`);
+            const res = await api.get('/tags/');
+            setTags(res.data);
+        } catch (error) {
+            console.error('Failed to fetch tags', error);
+        }
+    };
+
+    const handleAddTag = async () => {
+        if (!newTag.trim()) return;
+        setLoading(true);
+        try {
+            await api.post('/tags/', { name: newTag.trim(), color: '#6366f1' }); // Default indigo
+            setNewTag('');
+            fetchTags();
+        } catch (error) {
+            console.error('Failed to add tag', error);
+            alert('Failed to add tag. Name might be duplicate.');
         } finally {
-            setRebuilding(false);
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteTag = async (id: number) => {
+        // Confirmation handled in UI now
+        try {
+            await api.delete(`/tags/${id}`);
+            fetchTags();
+        } catch (error) {
+            console.error('Failed to delete tag', error);
+            alert('Failed to delete tag. It might still be in use.');
         }
     };
 
     return (
         <div className="card">
             <div className="flex items-center gap-3 mb-4">
-                <div className="icon-badge bg-amber-50">
-                    <History size={18} className="text-amber-500" />
+                <div className="icon-badge bg-rose-50">
+                    <TagIcon size={18} className="text-rose-500" />
                 </div>
                 <div>
-                    <h2 className="font-bold text-zinc-900">{t('settings.data_mgmt') || 'Data Management'}</h2>
-                    <p className="text-xs text-zinc-500">{t('settings.data_mgmt_desc') || 'Rebuild portfolio history from past transactions'}</p>
+                    <h2 className="font-bold text-zinc-900">Tag Management</h2>
+                    <p className="text-xs text-zinc-500">Manage custom tags for your assets</p>
                 </div>
             </div>
-            <div className="space-y-3">
-                <div>
-                    <label className="text-xs font-medium text-zinc-500 mb-1 block">{t('settings.start_date') || 'Start Date'}</label>
-                    <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="input-field w-full"
-                    />
-                </div>
-                <button
-                    onClick={handleRebuild}
-                    disabled={rebuilding}
-                    className="btn-primary w-full flex items-center justify-center gap-2"
-                >
-                    {rebuilding ? (
-                        <><RefreshCw size={14} className="animate-spin" /> {t('settings.rebuilding') || 'Rebuilding...'}</>
-                    ) : (
-                        <><RefreshCw size={14} /> {t('settings.rebuild_history') || 'Rebuild Portfolio History'}</>
+
+            <div className="space-y-4">
+                {/* List of Tags */}
+                <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                        <div key={tag.id} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-sm font-medium border border-slate-200 group">
+                            <span>{tag.name}</span>
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    if (confirmDeleteId === tag.id) {
+                                        handleDeleteTag(tag.id);
+                                        setConfirmDeleteId(null);
+                                    } else {
+                                        setConfirmDeleteId(tag.id);
+                                        // Auto-reset after 3 seconds
+                                        setTimeout(() => setConfirmDeleteId(null), 3000);
+                                    }
+                                }}
+                                className={`h-6 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-sm
+                                    ${confirmDeleteId === tag.id
+                                        ? "w-auto px-2 bg-red-500 text-white hover:bg-red-600"
+                                        : "w-6 bg-slate-200 text-slate-500 hover:bg-rose-100 hover:text-rose-500 hover:scale-110"
+                                    }`}
+                            >
+                                {confirmDeleteId === tag.id ? (
+                                    <span className="text-xs font-bold whitespace-nowrap">Confirm?</span>
+                                ) : (
+                                    <X size={14} strokeWidth={3} />
+                                )}
+                            </button>
+                        </div>
+                    ))}
+                    {tags.length === 0 && (
+                        <p className="text-sm text-zinc-400 italic">No tags defined yet.</p>
                     )}
-                </button>
-                {result && (
-                    <p className={`text-sm font-medium ${result.startsWith('✅') ? 'text-emerald-600' : 'text-red-500'}`}>
-                        {result}
-                    </p>
-                )}
+                </div>
+
+                {/* Add Tag Form */}
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        value={newTag}
+                        onChange={(e) => setNewTag(e.target.value)}
+                        placeholder="New tag name..."
+                        className="input-field flex-1"
+                        onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
+                    />
+                    <button
+                        onClick={handleAddTag}
+                        disabled={loading || !newTag.trim()}
+                        className="btn-primary flex items-center gap-2 px-4"
+                    >
+                        {loading ? <RefreshCw size={16} className="animate-spin" /> : <Plus size={16} />}
+                        Add
+                    </button>
+                </div>
             </div>
         </div>
     );

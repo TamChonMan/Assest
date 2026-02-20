@@ -16,6 +16,17 @@ class TransactionType(str, Enum):
     INTEREST = "INTEREST"
     DIVIDEND = "DIVIDEND"
     FEE = "FEE"
+class AssetTagLink(SQLModel, table=True):
+    asset_id: Optional[int] = Field(default=None, foreign_key="asset.id", primary_key=True, ondelete="CASCADE")
+    tag_id: Optional[int] = Field(default=None, foreign_key="tag.id", primary_key=True, ondelete="CASCADE")
+
+class Tag(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = Field(unique=True, index=True)
+    color: Optional[str] = None  # Hex color e.g. #FF0000
+
+    assets: List["Asset"] = Relationship(back_populates="tags", link_model=AssetTagLink)
+
 
 class Account(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -35,10 +46,11 @@ class Asset(SQLModel, table=True):
     name: Optional[str] = None
     type: str
     currency: str = Field(default="USD")  # Trading currency (e.g., HKD, USD)
-    tags: Optional[str] = None  # Comma-separated tags e.g. "Tech,China"
-
+    tags: List["Tag"] = Relationship(back_populates="assets", link_model=AssetTagLink)
+    
     transactions: List["Transaction"] = Relationship(back_populates="asset")
     prices: List["PriceHistory"] = Relationship(back_populates="asset")
+
 
 class Transaction(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

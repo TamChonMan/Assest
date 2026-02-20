@@ -29,6 +29,7 @@ A full-stack portfolio tracking system for retail investors to manage multi-curr
 - Real-time market prices from Yahoo Finance
 - **Multi-currency conversion** — HK stocks display in HK$, US stocks in $, totals unified to settlement currency
 - Per-holding P/L and allocation percentage
+- **Asset Tagging** — Assign custom tags/categories to holdings dynamically
 - Portfolio summary: Total Invested, Total Market Value, Total Equity (investments + cash)
 
 ### 📉 Analytics & History | 分析與歷史
@@ -45,7 +46,7 @@ A full-stack portfolio tracking system for retail investors to manage multi-curr
 - `formatNative()` for per-row native currency display, `format()` for unified totals
 
 ### ⚙️ Settings | 設定
-- Rebuild portfolio history on demand
+- **Custom Tags Management** — Create, view, and safely delete custom tags to categorize assets
 - Language and currency preferences
 
 ---
